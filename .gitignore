@@ -1,0 +1,4 @@
+.DS_Store
+# environment
+env/*
+!env/template
