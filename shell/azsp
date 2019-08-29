@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 az login
 az ad sp create-for-rbac -n "terraform" --role contributor

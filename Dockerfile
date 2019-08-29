@@ -27,12 +27,9 @@ WORKDIR ${VOLUME}
 
 # setting shells
 ADD ./shell /shell
-ADD ./env /env
-RUN chmod 775 /shell/*.sh && \
-mv /shell/terraform_init_state.sh /usr/local/bin/tf_init_state && \
-mv /shell/terraform.sh /usr/local/bin/tf && \
-mv /shell/k8s_info.sh /usr/local/bin/k8s_info && \
-mv /shell/k8s_help.sh /usr/local/bin/k8s_help
+RUN chmod 775 /shell/* && \
+mv /shell/* /usr/local/bin/ && \
+rm -rf /shell
 
 ENTRYPOINT []
-CMD ["/shell/cmd.sh"]
+CMD ["/usr/local/bin/cmd"]
