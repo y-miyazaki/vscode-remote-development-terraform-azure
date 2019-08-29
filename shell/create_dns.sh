@@ -1,6 +1,7 @@
 #!/bin/bash
 #------------------------------------------------------------------------
 # Associate DNS to Public IP Address
+# https://docs.microsoft.com/ja-jp/azure/aks/ingress-static-ip
 #------------------------------------------------------------------------
 
 NAME=`basename $0`

@@ -21,8 +21,11 @@ RUN az aks install-cli && \
 #     rm -f tflint_linux_amd64.zip tflint && \
 #     echo "PATH=/usr/local/tflint/bin:$PATH" >> $HOME/.bashrc
 
+# work directory
 RUN mkdir -p ${VOLUME}
 WORKDIR ${VOLUME}
+
+# setting shells
 ADD ./shell /shell
 ADD ./env /env
 RUN chmod 775 /shell/*.sh && \
