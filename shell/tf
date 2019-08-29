@@ -2,12 +2,16 @@
 
 set -e
 
+# script directory
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
+
 # terraform command
 COMMAND=$1
 
 # terraform key
-KEY=`cat terraform.key | sed -e "s/[\r\n]\+//g"`
-if [ -z $KEY ]; then
+if [ -e "terraform.key" ]; then
+  KEY=`cat terraform.key | sed -e "s/[\r\n]\+//g"`
+else
   KEY=terraform-tfstate
 fi
 
@@ -58,7 +62,7 @@ fi
 # export TF_LOG_PATH='./terraform.log'
 rm -f terraform.log crash.log main_init.tf
 if [ $IS_GENERATE_PROVIDER -eq "1" ]; then
-    cat ./files/main.template.tf | sed -e "s/##STORAGE_ACCOUNT_NAME##/${STORAGE_ACCOUNT_NAME}/g" > ./main_init.tf
+    cat $SCRIPT_DIR/files/main.template.tf | sed -e "s/##STORAGE_ACCOUNT_NAME##/${STORAGE_ACCOUNT_NAME}/g" > ./main_init.tf
     cat ./main_init.tf | sed -i -e "s@##CONTAINER_NAME##@${CONTAINER_NAME}@g" ./main_init.tf
     cat ./main_init.tf | sed -i -e "s@##KEY##@${KEY}@g" ./main_init.tf
 fi
