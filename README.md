@@ -17,11 +17,11 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "terraform.lintPath": "/usr/local/bin/tflint",
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "extensions": ["esbenp.prettier-vscode", "mauve.terraform"],
+  "extensions": ["esbenp.prettier-vscode", "mauve.terraform", "ipedrazas.kubernetes-snippets", "technosophos.vscode-helm"],
   "runArgs": [
     "-v",
     "${env:HOME}/##YOUR_WORKSPACE##:/workspace",
-    "--env-file=.env",
+    "--env-file=../.env.##ENV##",
     "--name",
     "terraform-azure-##ENV##"
   ],
@@ -40,10 +40,10 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "terraform.lintPath": "/usr/local/bin/tflint",
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "extensions": ["esbenp.prettier-vscode", "mauve.terraform"],
+  "extensions": ["esbenp.prettier-vscode", "mauve.terraform", "ipedrazas.kubernetes-snippets", "technosophos.vscode-helm"],
   "runArgs": [
     "-v",
-    "${env:HOME}/workspace/terraform:/workspace",
+    "${env:HOME}/workspace/hana_terraform:/workspace",
     "--env-file=.env",
     "--name",
     "terraform-azure-development"
@@ -58,52 +58,100 @@ You need to fix .env file.
 $ cat env/{environment}/.env
 # ENV uses terraform.${ENV}.tfvars file etc...
 ENV={development|staging|production..etc}
-# default project id gcloud command and terraform
-PROJECT_ID={azure project id}
-# default region uses gcloud command and terraform
-REGION={azure main region}
-# default zone uses gcloud command and terraform
-ZONE={azure main region zone}
-# terraform state gcs bucket name.
-BUCKET={gcs terraform state bucket}
+
 # IS_GENERATE_PROVIDER generates main_init.tf for terraform and provider and google_project data resources.
 # When IS_GENERATE_PROVIDER is equal to 1, created main_init.tf under workspace directory.
 IS_GENERATE_PROVIDER={0|1}
-# GOOGLE_CLOUD_KEYFILE_JSON uses gcloud auth command and init provider.
-GOOGLE_CLOUD_KEYFILE_JSON=/env/{environment}/.key
+
+#---------------------------------------------------------
+# see
+# https://docs.microsoft.com/ja-jp/azure/virtual-machines/linux/terraform-install-configure
+#---------------------------------------------------------
+# app_id used for az command and terraform
+ARM_CLIENT_ID={set app_id from service principal}
+
+# password used for az command and terraform
+ARM_CLIENT_SECRET={set passowrd from service principal}
+
+# tenant used for az command and terraform
+# az account show --query "{subscriptionId:id, tenantId:tenantId}"
+ARM_TENANT_ID={set tenant_id from service principal}
+
+# subscription id used for az command and terraform
+# az account show --query "{subscriptionId:id, tenantId:tenantId}"
+ARM_SUBSCRIPTION_ID={set subscription_id from service principal}
+
+#---------------------------------------------------------
+# for terraform state
+# see
+# https://docs.microsoft.com/ja-jp/azure/terraform/terraform-backend
+#---------------------------------------------------------
+# Azure Storage Account Name for terraform state
+STORAGE_ACCOUNT_NAME={storage account name}
+
+# Azure Resource Group for terraform state
+RESOURCE_GROUP_NAME={resource group name}
+
+# Azure Container Name for terraform state
+CONTAINER_NAME={container name}
+
+# Azure Storage Account Access
+# check console [Azure Storage Account -> Access Key Page]
+# command)
+# az storage account keys list --resource-group ${RESOURCE_GROUP_NAME} --account-name ${STORAGE_ACCOUNT_NAME}  --query [0].value -o tsv
+ARM_ACCESS_KEY={storage account access key}
 ```
 Here is example.
 ```
 $ cat env/development/.env
+# ENV uses terraform.${ENV}.tfvars file etc...
 ENV=development
-PROJECT_ID=pure-ace-xxxxxxxx
-REGION=us-west1
-ZONE=us-west1-a
-BUCKET=test-terraform-state
-IS_GENERATE_PROVIDER=0
-GOOGLE_CLOUD_KEYFILE_JSON=/env/development/.key
+
+# IS_GENERATE_PROVIDER generates main_init.tf for terraform and provider and google_project data resources.
+# When IS_GENERATE_PROVIDER is equal to 1, created main_init.tf under workspace directory.
+IS_GENERATE_PROVIDER=1
+#---------------------------------------------------------
+# see
+# https://docs.microsoft.com/ja-jp/azure/virtual-machines/linux/terraform-install-configure
+#---------------------------------------------------------
+# app_id used for az command and terraform
+ARM_CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+
+# password used for az command and terraform
+ARM_CLIENT_SECRET=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+
+# tenant used for az command and terraform
+# az account show --query "{subscriptionId:id, tenantId:tenantId}"
+ARM_TENANT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+
+# subscription id used for az command and terraform
+# az account show --query "{subscriptionId:id, tenantId:tenantId}"
+ARM_SUBSCRIPTION_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
+
+#---------------------------------------------------------
+# for terraform state
+# see
+# https://docs.microsoft.com/ja-jp/azure/terraform/terraform-backend
+#---------------------------------------------------------
+# Azure Storage Account Name for terraform state
+STORAGE_ACCOUNT_NAME=xxxxxxxxxxxxxxxxxx
+
+# Azure Resource Group for terraform state
+RESOURCE_GROUP_NAME=tfstate-resource-group
+
+# Azure Container Name for terraform state
+CONTAINER_NAME=tfstate
+
+# Azure Storage Account Access
+# check console [Azure Storage Account -> Access Key Page]
+# command)
+# az storage account keys list --resource-group ${RESOURCE_GROUP_NAME} --account-name ${STORAGE_ACCOUNT_NAME}  --query [0].value -o tsv
+ARM_ACCESS_KEY=xxxxxxxxxxxxx/xxxxxxxxx/xxxxxxxxxxxxxxxxxx==
 ```
 ### fix env/{environment}/.key.
 You need to fix .key file.  
 This file is Service Account Key json. Please check this following page.  
 https://cloud.google.com/iam/docs/creating-managing-service-account-keys  
-  
-Here is example.
-```json
-$ cat env/development/.key
-{
-"type": "service_account",
-"project_id": "[PROJECT-ID]",
-"private_key_id": "[KEY-ID]",
-"private_key": "-----BEGIN PRIVATE KEY-----\n[PRIVATE-KEY]\n-----END PRIVATE KEY-----\n",
-"client_email": "[SERVICE-ACCOUNT-EMAIL]",
-"client_id": "[CLIENT-ID]",
-"auth_uri": "https://accounts.google.com/o/oauth2/auth",
-"token_uri": "https://accounts.google.com/o/oauth2/token",
-"auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-"client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/[SERVICE-ACCOUNT-EMAIL]"
-}
-```
 
 ## Supplement
 ### VSCode Remote Development
@@ -114,29 +162,42 @@ https://code.visualstudio.com/docs/remote/containers
 ```bash
 bash-4.4# terraform -v
 Terraform v0.12.4
-+ provider.google v2.12.0
++ provider.azuread v0.6.0
++ provider.azurerm v1.33.0
 
 Your version of Terraform is out of date! The latest version
-is 0.12.6. You can update by downloading from www.terraform.io/downloads.html
+is 0.12.7. You can update by downloading from www.terraform.io/downloads.html
 ```
 
-### gcloud version and gcloud config list
+### az/helm/kubectl versions
 ```
-bash-4.4# gcloud -v
-Google Cloud SDK 257.0.0
-bq 2.0.46
-core 2019.08.02
-gsutil 4.41
-kubectl 2019.08.02
-bash-4.4# gsutil -v
-gsutil version: 4.41
-bash-4.4# gcloud config list
-[core]
-account = xxxxxxxxxxxxx@xxxxxxxxxxxxx.iam.gserviceaccount.com
-disable_usage_reporting = False
-project = xxxxxxxxxxxxx
+bash-4.4# az --version
+azure-cli                         2.0.71 *
 
-Your active configuration is: [default]
+command-modules-nspkg               2.0.3
+core                              2.0.71 *
+nspkg                              3.0.4
+telemetry                          1.0.3
+
+Python location '/usr/bin/python'
+Extensions directory '/root/.azure/cliextensions'
+
+Python (Linux) 2.7.16 (default, May  6 2019, 19:35:26) 
+[GCC 8.3.0]
+
+Legal docs and information: aka.ms/AzureCliLegal
+
+
+
+bash-4.4# helm version
+Client: &version.Version{SemVer:"v2.14.3", GitCommit:"0e7f3b6637f7af8fcfddb3d2941fcc7cbebb0085", GitTreeState:"clean"}
+Error: Get http://localhost:8080/api/v1/namespaces/kube-system/pods?labelSelector=app%3Dhelm%2Cname%3Dtiller: dial tcp 127.0.0.1:8080: connect: connection refused
+
+
+
+bash-4.4# kubectl version
+Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.3", GitCommit:"2d3c76f9091b6bec110a5e63777c332469e0cba2", GitTreeState:"clean", BuildDate:"2019-08-19T11:13:54Z", GoVersion:"go1.12.9", Compiler:"gc", Platform:"linux/amd64"}
+The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 
 ## Required
@@ -150,7 +211,11 @@ https://docs.docker.com/install/ -->
 https://www.docker.com/
 - Terraform  
 https://www.terraform.io/
-- Google Cloud SDK  
-https://cloud.google.com/sdk/downloads
+- Azure CLI  
+https://docs.microsoft.com/ja-jp/cli/azure/?view=azure-cli-latest
+- Kubernetes  
+https://kubernetes.io/
+- Helm  
+https://helm.sh/
 
 ## Note
