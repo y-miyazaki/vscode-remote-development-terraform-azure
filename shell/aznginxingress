@@ -2,29 +2,69 @@
 # ------------------------------------------------------------------------
 # see)
 # https://docs.microsoft.com/ja-jp/azure/aks/ingress-static-ip
+# Install nginx-ingress and allocate ip address.
 # ------------------------------------------------------------------------
 NAME=`basename $0`
-IP=$1
 
-if [ -z $IP ]; then
-  echo "usage: ./${NAME} {public ip}" 1>&2
+function usage () {
+  echo "# ------------------------------------------------------------------------"
+  echo "# 1.install nginx-ingress and allocate ip address."
+  echo "# 2.delete nginx-ingress."
+  echo "# ------------------------------------------------------------------------"
+  echo "usage: ${NAME} install {ip} {namespace} {release name}" 1>&2
+  echo "usage: ${NAME} delete {release name}" 1>&2
   exit 1
+}
+
+# Nginx-Ingress IP Address
+CMD=$1
+if [ "$CMD" = "install" ]; then
+  # Nginx-Ingress IP Address
+  IP=$2
+  if [ -z $IP ]; then
+    usage
+  fi
+
+  # Nginx-Ingress Namespace
+  if [ -z $3 ]; then
+    NAMESPACE=default
+  else
+    NAMESPACE=$3
+  fi
+
+  # Nginx-Ingress Relase Name
+  if [ -z $4 ]; then
+    usage
+  else
+    RELEASE_NAME=$4
+  fi
+  # Create a namespace for your ingress resources
+  # kubectl create namespace ingress-basic
+
+  # Use Helm to deploy an NGINX ingress controller
+  helm install stable/nginx-ingress \
+      --set controller.replicaCount=2 \
+      --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+      --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
+      --set controller.service.loadBalancerIP="$IP" \
+      --namespace $NAMESPACE \
+      --name $RELEASE_NAME
+
+  # check service nginx ingress
+  echo "# ------------------------------------------------------------------------"
+  echo "# Nginx Ingress associates ip address now."
+  echo "# Please check this following command."
+  echo "# ------------------------------------------------------------------------"
+  echo "kubectl get service -l app=nginx-ingress --namespace $NAMESPACE"
+
+elif [ "$CMD" = "delete" ]; then
+  # Nginx-Ingress Relase Name
+  if [ -z $2 ]; then
+    usage
+  else
+    RELEASE_NAME=$2
+  fi
+  helm delete --purge $RELEASE_NAME
+else
+  usage
 fi
-
-# Create a namespace for your ingress resources
-# kubectl create namespace ingress-basic
-
-# Use Helm to deploy an NGINX ingress controller
-helm install stable/nginx-ingress \
-    --set controller.replicaCount=2 \
-    --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
-    --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux \
-    --set controller.service.loadBalancerIP="$IP" \
-    --name nginx-ingress
-
-# check service nginx ingress
-echo "# ------------------------------------------------------------------------"
-echo "# Nginx Ingress associates ip address now."
-echo "# Please check this following command."
-echo "# ------------------------------------------------------------------------"
-echo "kubectl get service -l app=nginx-ingress --namespace ingress-basic"

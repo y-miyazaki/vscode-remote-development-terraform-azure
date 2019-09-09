@@ -9,22 +9,22 @@ set -e
 NAME=`basename $0`
 STORAGE_ACCOUNT_NAME=$1
 if [ -z $STORAGE_ACCOUNT_NAME ]; then
-  echo "usage: ./${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
+  echo "usage: ${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
   exit 1
 fi
 RESOURCE_GROUP_NAME=$2
 if [ -z $RESOURCE_GROUP_NAME ]; then
-  echo "usage: ./${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
+  echo "usage: ${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
   exit 1
 fi
 CONTAINER_NAME=$3
 if [ -z $CONTAINER_NAME ]; then
-  echo "usage: ./${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
+  echo "usage: ${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
   exit 1
 fi
 LOCATION=$4
 if [ -z $LOCATION ]; then
-  echo "usage: ./${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
+  echo "usage: ${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
   exit 1
 fi
 
