@@ -1,0 +1,25 @@
+#!/bin/bash
+#--------------------------------------------------------------
+# Create server certification             
+#--------------------------------------------------------------
+set -e
+
+TARGETDIR="certs/server"
+
+CA_KEY=${TARGETDIR}/caKey.pem
+CA_CERT=${TARGETDIR}/caCert.pem
+CA_DER_B64=${TARGETDIR}/serverCert.txt
+
+if [ -f ${CA_KEY} -a -f ${CA_CERT} -a -f ${CA_DER_B64} ] ; then
+  echo "Already created. If you want to recreate, remove first."
+  exit 1
+fi
+
+mkdir -p ${TARGETDIR}
+
+ipsec pki --gen --type rsa --size 4096 --outform pem > ${CA_KEY}
+ipsec pki --self --in ${CA_KEY} --dn "CN=VPN CA" --ca --outform pem \
+	--lifetime 3650 > ${CA_CERT}
+openssl x509 -in ${CA_CERT} -outform der | base64 -w0 > ${CA_DER_B64}
+
+echo "Created Server Key and Cert files."

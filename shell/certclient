@@ -1,0 +1,41 @@
+#!/bin/bash
+#--------------------------------------------------------------
+# Create client certification
+#--------------------------------------------------------------
+set -e
+
+NAME=`basename $0`
+
+if [ $# -ne 2 ] ; then
+  echo "Usage: $NAME username password"
+  exit 1
+fi
+
+export PASSWORD=$2
+export USERNAME=$1
+TARGETDIR="certs/users/${USERNAME}"
+SERVER_CERT_DIR="certs/server"
+
+CA_CERT=${SERVER_CERT_DIR}/caCert.pem
+CA_KEY=${SERVER_CERT_DIR}/caKey.pem
+
+if [ ! -f ${CA_CERT} -o ! -f ${CA_KEY} ] ; then
+  echo "Server Certification/Key file not found. Try again after creating server cert/key."
+  exit 1
+fi
+
+USER_KEY="${TARGETDIR}/${USERNAME}Key.pem"
+USER_CERT="${TARGETDIR}/${USERNAME}Cert.pem"
+USER_P12="${TARGETDIR}/${USERNAME}.p12"
+
+mkdir -p ${TARGETDIR}
+
+ipsec pki --gen --outform pem > "${USER_KEY}"
+ipsec pki --pub --in "${USER_KEY}" | \
+	ipsec pki --issue --cacert ${CA_CERT} --cakey ${CA_KEY} \
+	--dn "CN=${USERNAME}" --san "${USERNAME}" --flag clientAuth --outform pem \
+	--lifetime 3650 > "${USER_CERT}"
+openssl pkcs12 -in "${USER_CERT}" -inkey "${USER_KEY}" -certfile ${CA_CERT} \
+	-export -out "${USER_P12}" -password "pass:${PASSWORD}"
+
+echo "Created ${USER_P12}"
