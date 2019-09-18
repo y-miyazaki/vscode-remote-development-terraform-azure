@@ -15,7 +15,7 @@ function usage () {
   exit 1
 }
 
-
+# arguments
 STORAGE_ACCOUNT_NAME=$1
 if [ -z $STORAGE_ACCOUNT_NAME ]; then
   usage
