@@ -4,6 +4,7 @@
 # https://docs.microsoft.com/ja-jp/azure/aks/ingress-static-ip
 # Install nginx-ingress and allocate ip address.
 # ------------------------------------------------------------------------
+set -e
 NAME=`basename $0`
 
 function usage () {

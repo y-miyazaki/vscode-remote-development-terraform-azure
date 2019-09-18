@@ -1,12 +1,39 @@
-#!/bin/sh
-
+#!/bin/bash
+#--------------------------------------------------------------
+# This script runs terraform command and create main_init.tf file.
+# main_init.tf generates terraform backend block and provider(azurerm/azuread).
+# 
+# if you want to run this script, need to add this following environment.
+# - ENV
+# - ARM_CLIENT_ID
+# - ARM_CLIENT_SECRET
+# - ARM_SUBSCRIPTION_ID
+# - STORAGE_ACCOUNT_NAME
+# - RESOURCE_GROUP_NAME
+# - CONTAINER_NAME
+# - IS_GENERATE_PROVIDER
+# 
+# usage
+# ex) tf plan
+# ex) tf apply
+#--------------------------------------------------------------
 set -e
+
+# name
+NAME=`basename $0`
+
+# usage function
+function usage () {
+  echo "terraform needs $1 environment parameter."
+  echo "usage: ${NAME} {command...}" 1>&2
+  exit 1
+}
 
 # script directory
 SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
 # terraform command
-COMMAND=$1
+COMMAND=$@
 
 # terraform key
 if [ -e "terraform.key" ]; then
@@ -22,39 +49,39 @@ fi
 
 # check environment
 if [ -z $ENV ]; then
-  echo "terraform needs ENV environment parameter."
+  usage ENV
   exit 1
 fi
 if [ -z $ARM_CLIENT_ID ]; then
-  echo "terraform needs ARM_CLIENT_ID environment parameter."
+  usage ARM_CLIENT_ID
   exit 1
 fi
 if [ -z $ARM_CLIENT_SECRET ]; then
-  echo "terraform needs ARM_CLIENT_SECRET environment parameter."
+  usage ARM_CLIENT_SECRET
   exit 1
 fi
 if [ -z $ARM_TENANT_ID ]; then
-  echo "terraform needs ARM_TENANT_ID environment parameter."
+  usage ARM_TENANT_ID
   exit 1
 fi
 if [ -z $ARM_SUBSCRIPTION_ID ]; then
-  echo "terraform needs ARM_SUBSCRIPTION_ID environment parameter."
+  usage ARM_SUBSCRIPTION_ID
   exit 1
 fi
 if [ -z $STORAGE_ACCOUNT_NAME ]; then
-  echo "terraform needs STORAGE_ACCOUNT_NAME environment parameter."
+  usage STORAGE_ACCOUNT_NAME
   exit 1
 fi
 if [ -z $RESOURCE_GROUP_NAME ]; then
-  echo "terraform needs RESOURCE_GROUP_NAME environment parameter."
+  usage RESOURCE_GROUP_NAME
   exit 1
 fi
 if [ -z $CONTAINER_NAME ]; then
-  echo "terraform needs CONTAINER_NAME environment parameter."
+  usage CONTAINER_NAME
   exit 1
 fi
 if [ -z $IS_GENERATE_PROVIDER ]; then
-  echo "terraform needs IS_GENERATE_PROVIDER environment parameter."
+  usage IS_GENERATE_PROVIDER
   exit 1
 fi
 
