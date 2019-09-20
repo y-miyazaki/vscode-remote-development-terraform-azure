@@ -13,7 +13,9 @@ function usage () {
   echo "# 2.delete nginx-ingress."
   echo "# ------------------------------------------------------------------------"
   echo "usage: ${NAME} install {ip} {namespace} {release name}" 1>&2
+  echo "ex: ${NAME} install xxx.xxx.xxx.xxx default nginx-ingress" 1>&2
   echo "usage: ${NAME} delete {release name}" 1>&2
+  echo "ex: ${NAME} delete nginx-ingress" 1>&2
   exit 1
 }
 
