@@ -1,6 +1,8 @@
 #!/bin/bash
 #--------------------------------------------------------------
-# Create server certification             
+# Create server certification
+# You need to check this following URL.
+# https://docs.microsoft.com/ja-jp/azure/vpn-gateway/vpn-gateway-certificates-point-to-site-linux           
 #--------------------------------------------------------------
 set -e
 
@@ -20,6 +22,6 @@ mkdir -p ${TARGETDIR}
 ipsec pki --gen --type rsa --size 4096 --outform pem > ${CA_KEY}
 ipsec pki --self --in ${CA_KEY} --dn "CN=VPN CA" --ca --outform pem \
 	--lifetime 3650 > ${CA_CERT}
-openssl x509 -in ${CA_CERT} -outform der | base64 -w0 > ${CA_DER_B64}
+openssl x509 -in ${CA_CERT} -outform der | base64 | tr -d \\n | cat > ${CA_DER_B64}
 
 echo "Created Server Key and Cert files."

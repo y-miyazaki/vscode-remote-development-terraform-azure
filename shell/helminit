@@ -5,12 +5,26 @@
 # see tiller
 # https://helm.sh/docs/glossary/
 #------------------------------------------------------------------------
+set -e
 
-HELM_RBAC_FILE=$1
+# script directory
+SCRIPT_DIR=$(cd $(dirname $0); pwd)
 
-kubectl apply -f $HELM_RBAC_FILE
-helm init --service-account tiller --node-selectors "beta.kubernetes.io/os"="linux"
+IS_TILLER_INSTALL=$(kubectl get serviceaccount -n kube-system | grep tiller | wc -l | tr -d '\n')
+if [ $IS_TILLER_INSTALL -eq "0" ]; then
+    kubectl apply -f $SCRIPT_DIR/files/helm-rbac.yaml
+    helm init --service-account tiller --node-selectors "beta.kubernetes.io/os"="linux"
+else
+    echo "Tiller already created."
+fi
 
 # Check tiller
-helm version
+while true
+do
+    IS_SET_HELM=$(helm version | grep Server | wc -l | tr -d '\n')
+    if [ $IS_SET_HELM -eq "1" ]; then
+        break
+    fi
+done
 kubectl get serviceaccount -n kube-system | grep tiller
+echo "Tiller server runs."

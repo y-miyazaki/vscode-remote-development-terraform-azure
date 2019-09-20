@@ -4,14 +4,19 @@ ARG VOLUME=/workspace
 ENV VOLUME /workspace
 
 # Install dependent packages
-RUN apk add --no-cache make bash tar curl zip py-pip openssl && \
+RUN apk update && \
+    apk upgrade && \
+    apk add --no-cache make bash tar curl zip py-pip openssl && \
+    # Install azure cli
     apk add --no-cache --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev && \
     pip --no-cache-dir install -U pip && \
     pip --no-cache-dir install azure-cli `#Install Azure CLI` && \
-    apk del --purge build
-# Install kubectl and helm
-RUN az aks install-cli && \
-    curl -L https://git.io/get_helm.sh | bash `# Install Helm`
+    apk del --purge build && \
+    # Install kubectl and helm
+    az aks install-cli && \
+    curl -L https://git.io/get_helm.sh | bash `# Install Helm` && \
+    # Install for CA Certiticate
+    apk add --no-cache strongswan 2>&1
 
 # tflint
 # RUN wget https://github.com/wata727/tflint/releases/download/v0.1.0/tflint_linux_amd64.zip && \
