@@ -148,10 +148,6 @@ CONTAINER_NAME=tfstate
 # az storage account keys list --resource-group ${RESOURCE_GROUP_NAME} --account-name ${STORAGE_ACCOUNT_NAME}  --query [0].value -o tsv
 ARM_ACCESS_KEY=xxxxxxxxxxxxx/xxxxxxxxx/xxxxxxxxxxxxxxxxxx==
 ```
-### fix env/{environment}/.key.
-You need to fix .key file.  
-This file is Service Account Key json. Please check this following page.  
-https://cloud.google.com/iam/docs/creating-managing-service-account-keys  
 
 ## Supplement
 ### VSCode Remote Development
@@ -198,6 +194,103 @@ Error: Get http://localhost:8080/api/v1/namespaces/kube-system/pods?labelSelecto
 bash-4.4# kubectl version
 Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.3", GitCommit:"2d3c76f9091b6bec110a5e63777c332469e0cba2", GitTreeState:"clean", BuildDate:"2019-08-19T11:13:54Z", GoVersion:"go1.12.9", Compiler:"gc", Platform:"linux/amd64"}
 The connection to the server localhost:8080 was refused - did you specify the right host or port?
+```
+
+## tf plan(terraform plan)
+if you set "IS_GENERATE_PROVIDER=1", this following command generates main_init.tf under current directory and action terraform plan.
+main_init.tf is created by tf command.
+```bash
+$ tf plan
+Initializing modules...
+
+Initializing the backend...
+
+Initializing provider plugins...
+
+・・・・・・・・・・・・・・・・・・・・・・・・
+
+------------------------------------------------------------------------
+
+No changes. Infrastructure is up-to-date.
+
+This means that Terraform did not detect any differences between your
+configuration and real physical resources that exist. As a result, no
+actions need to be performed.
+
+$ cat main_init.tf
+#--------------------------------------------------------------
+# main_init.tf must be not touch! because main_init.tf is auto generate file.
+# If you want to fix it, you should be fix /shell/files/main.template.tf.
+#--------------------------------------------------------------
+
+#--------------------------------------------------------------
+# terraform state
+#--------------------------------------------------------------
+terraform {
+  required_version = ">= 0.12"
+  backend "azurerm" {
+    storage_account_name = "xxxxxxxxxxxxxxxxx"
+    container_name = "tfstate"
+    key = "terraform-tfstate"
+  }
+}
+
+#--------------------------------------------------------------
+# Provider Setting
+#--------------------------------------------------------------
+provider "azurerm" {
+}
+provider "azuread" {
+ version = ">=0.3.0"
+}
+```
+
+## tf apply(terraform apply)
+if you set "IS_GENERATE_PROVIDER=1", this following command generates main_init.tf under current directory and action terraform apply.
+main_init.tf is created by tf command.
+```bash
+$ tf apply
+Initializing modules...
+
+Initializing the backend...
+
+Initializing provider plugins...
+
+・・・・・・・・・・・・・・・・・・・・・・・・
+
+------------------------------------------------------------------------
+
+No changes. Infrastructure is up-to-date.
+
+This means that Terraform did not detect any differences between your
+configuration and real physical resources that exist. As a result, no
+actions need to be performed.
+$ cat main_init.tf
+#--------------------------------------------------------------
+# main_init.tf must be not touch! because main_init.tf is auto generate file.
+# If you want to fix it, you should be fix /shell/files/main.template.tf.
+#--------------------------------------------------------------
+
+#--------------------------------------------------------------
+# terraform state
+#--------------------------------------------------------------
+terraform {
+  required_version = ">= 0.12"
+  backend "azurerm" {
+    storage_account_name = "xxxxxxxxxxxxxxxxx"
+    container_name = "tfstate"
+    key = "terraform-tfstate"
+  }
+}
+
+#--------------------------------------------------------------
+# Provider Setting
+#--------------------------------------------------------------
+provider "azurerm" {
+}
+provider "azuread" {
+ version = ">=0.3.0"
+}
 ```
 
 ## Required
