@@ -35,7 +35,7 @@ SCRIPT_DIR=$(cd $(dirname $0); pwd)
 # arguments
 COMMAND=$@
 
-# terraform key
+# terraform-state key
 if [ -e "terraform-state.key" ]; then
   KEY=`cat terraform-state.key | sed -e "s/[\r\n]\+//g"`
 else
