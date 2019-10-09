@@ -1,32 +1,50 @@
 #!/bin/bash
+# ------------------------------------------------------------------------
+# kubectl information
+# ------------------------------------------------------------------------
+set -e
+
+NAMESPACE=${1:-default}
 
 # node
 echo "------------------------------------------------------------------------"
 echo "node"
 echo "------------------------------------------------------------------------"
-kubectl get no
+kubectl --namespace ${NAMESPACE} get no
 echo -e "\n"
 echo "------------------------------------------------------------------------"
 echo "pod"
 echo "------------------------------------------------------------------------"
 # pod
-kubectl get po
+kubectl --namespace ${NAMESPACE} get po
 echo -e "\n"
 # deployment
 echo "------------------------------------------------------------------------"
 echo "deployment"
 echo "------------------------------------------------------------------------"
-kubectl get deployment
+kubectl --namespace ${NAMESPACE} get deployment
 echo -e "\n"
 # service
 echo "------------------------------------------------------------------------"
 echo "service"
 echo "------------------------------------------------------------------------"
-kubectl get service
+kubectl --namespace ${NAMESPACE} get service
 echo -e "\n"
 # ingrees
 echo "------------------------------------------------------------------------"
 echo "ingress"
 echo "------------------------------------------------------------------------"
-kubectl get ingress
+kubectl --namespace ${NAMESPACE} get ingress
+echo -e "\n"
+# ConfigMap
+echo "------------------------------------------------------------------------"
+echo "configMap"
+echo "------------------------------------------------------------------------"
+kubectl --namespace ${NAMESPACE} get configMap
+echo -e "\n"
+# cronjob
+echo "------------------------------------------------------------------------"
+echo "cronjob"
+echo "------------------------------------------------------------------------"
+kubectl --namespace ${NAMESPACE} get cronjob
 echo -e "\n"

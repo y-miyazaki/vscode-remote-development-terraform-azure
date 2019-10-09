@@ -1,0 +1,39 @@
+#!/bin/bash
+#--------------------------------------------------------------
+# Create SSL Certification
+#--------------------------------------------------------------
+set -e
+
+NAME=`basename $0`
+
+SAN=$1
+DIR=${2:-certs}
+
+if [ ! -n $SAN ]; then
+    echo "usage $NAME {SAN} {output directory}"
+    exit 1
+fi
+# make directory
+mkdir -p $DIR
+
+# pass secret key.
+openssl genrsa -out $DIR/pk.pem -aes256 2048
+
+# no pass secret key.
+openssl rsa -in $DIR/pk.pem -out $DIR/pk_nopass.pem
+
+# create csr
+openssl req -new -key $DIR/pk_nopass.pem -out $DIR/server.csr
+
+# display text
+echo "--------------------------------------------------------------"
+echo "Information"
+echo "--------------------------------------------------------------"
+openssl req -text -in $DIR/server.csr
+echo "--------------------------------------------------------------"
+
+# create crt(need to SAN)
+openssl x509 -req -days 365 -in $DIR/server.csr -signkey $DIR/pk_nopass.pem -out $DIR/server.crt -extfile $SAN
+
+# create pfx
+openssl pkcs12 -export -inkey $DIR/pk_nopass.pem -in $DIR/server.crt -out $DIR/server.pfx

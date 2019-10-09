@@ -1,0 +1,16 @@
+#!/bin/bash
+# ------------------------------------------------------------------------
+# Install istio from helm
+# ------------------------------------------------------------------------
+set -e
+
+NAME=`basename $0`
+ISTIO_VERSION=${ISTIO_VERSION:-1.3.2}
+NAMESPACE=${1:-istio-system}
+
+# install tiller
+helminit
+
+# install istio
+helm repo add istio.io https://storage.googleapis.com/istio-release/releases/$ISTIO_VERSION/charts/
+helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE

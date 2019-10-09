@@ -1,4 +1,4 @@
-FROM hashicorp/terraform:0.12.4
+FROM hashicorp/terraform:0.12.9
 
 ARG VOLUME=/workspace
 ENV VOLUME /workspace
@@ -16,7 +16,12 @@ RUN apk update && \
     az aks install-cli && \
     curl -L https://git.io/get_helm.sh | bash `# Install Helm` && \
     # Install for CA Certiticate
-    apk add --no-cache strongswan 2>&1
+    apk add --no-cache strongswan 2>&1 && \
+    # Install Istio(https://istio.io/docs/setup/)
+    curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.2 sh - && \
+    cd istio-1.3.2 && \
+    echo "export PATH=$PWD/bin:$PATH" >> ~/.bash_profile && \
+    echo "export ISTIO_VERSION=1.3.2" >> ~/.bash_profile
 
 # tflint
 # RUN wget https://github.com/wata727/tflint/releases/download/v0.1.0/tflint_linux_amd64.zip && \

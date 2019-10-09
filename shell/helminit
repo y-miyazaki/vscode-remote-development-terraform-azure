@@ -25,6 +25,7 @@ do
     if [ $IS_SET_HELM -eq "1" ]; then
         break
     fi
+    sleep 3
 done
 kubectl get serviceaccount -n kube-system | grep tiller
 echo "Tiller server runs."
