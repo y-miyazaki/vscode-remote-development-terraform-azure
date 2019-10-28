@@ -1,6 +1,6 @@
 #!/bin/bash
 #--------------------------------------------------------------
-# Create server certification
+# Create server certification for VPN
 # You need to check this following URL.
 # https://docs.microsoft.com/ja-jp/azure/vpn-gateway/vpn-gateway-certificates-point-to-site-linux           
 #--------------------------------------------------------------

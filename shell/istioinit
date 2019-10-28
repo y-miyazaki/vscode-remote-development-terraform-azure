@@ -6,11 +6,32 @@ set -e
 
 NAME=`basename $0`
 ISTIO_VERSION=${ISTIO_VERSION:-1.3.2}
-NAMESPACE=${1:-istio-system}
-
+NAMESPACE=istio-system
+INSTALL_FLG=${1:-install}
 # install tiller
 helminit
 
-# install istio
-helm repo add istio.io https://storage.googleapis.com/istio-release/releases/$ISTIO_VERSION/charts/
-helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
+if [ $INSTALL_FLG = "install" ]; then
+    helm init --client-only
+    helm repo update
+    # install istio
+    helm repo add istio.io https://storage.googleapis.com/istio-release/releases/$ISTIO_VERSION/charts/
+    helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
+    # MTLS off
+    # helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio --name istio --namespace istio-system --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo.yaml
+    # MTLS on
+    helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio --name istio --namespace istio-system --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
+    kubectl get crds | grep 'istio.io'
+
+    # sidecar auto inject.
+    kubectl label namespace default istio-injection=enabled --overwrite
+    kubectl get namespace -L istio-injection
+elif [ $INSTALL_FLG = "uninstall" ]; then
+    set +e
+    helm delete --purge istio
+    helm delete --purge istio-init
+    helm delete --purge istio-cni
+    kubectl delete namespace istio-system
+    kubectl label namespace default istio-injection= --overwrite
+    set -e
+fi

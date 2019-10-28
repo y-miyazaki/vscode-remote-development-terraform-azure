@@ -1,0 +1,17 @@
+#!/bin/bash
+
+echo "------------------------------------------------------------------------"
+echo "envoy log output stdout"
+echo "------------------------------------------------------------------------"
+echo "# Log On"
+echo "# helm template /istio-1.3.2/install/kubernetes/helm/istio --namespace=istio-system -x templates/configmap.yaml --set global.proxy.accessLogFile="/dev/stdout" | kubectl replace -f -configmap/istio replaced"
+echo "# Log Off"
+echo "# helm template install/kubernetes/helm/istio --namespace=istio-system -x templates/configmap.yaml | kubectl replace -f -configmap "istio" replaced "
+echo -e "\n"
+
+echo "------------------------------------------------------------------------"
+echo "check envoy log"
+echo "------------------------------------------------------------------------"
+echo "kubectl logs -f -l app={your development label app} -c istio-proxy"
+echo -e "\n"
+

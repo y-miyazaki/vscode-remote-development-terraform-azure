@@ -1,6 +1,6 @@
 #!/bin/bash
 #--------------------------------------------------------------
-# Create client certification
+# Create client certification for VPN
 #--------------------------------------------------------------
 set -e
 
