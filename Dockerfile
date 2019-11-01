@@ -3,10 +3,14 @@ FROM hashicorp/terraform:0.12.9
 ARG VOLUME=/workspace
 ENV VOLUME /workspace
 
+# for istio
+ENV PATH=/istio-1.3.2/bin:$PATH
+ENV ISTIO_VERSION=1.3.2
+
 # Install dependent packages
 RUN apk update && \
     apk upgrade && \
-    apk add --no-cache make bash tar curl zip py-pip openssl && \
+    apk add --no-cache make bash tar curl zip py-pip openssl jq && \
     # Install azure cli
     apk add --no-cache --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev && \
     pip --no-cache-dir install -U pip && \
@@ -18,10 +22,7 @@ RUN apk update && \
     # Install for CA Certiticate
     apk add --no-cache strongswan 2>&1 && \
     # Install Istio(https://istio.io/docs/setup/)
-    curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.2 sh - && \
-    cd istio-1.3.2 && \
-    echo "export PATH=$PWD/bin:$PATH" >> ~/.bash_profile && \
-    echo "export ISTIO_VERSION=1.3.2" >> ~/.bash_profile
+    curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.2 sh -
 
 # tflint
 # RUN wget https://github.com/wata727/tflint/releases/download/v0.1.0/tflint_linux_amd64.zip && \
