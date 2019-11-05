@@ -10,7 +10,7 @@ ENV ISTIO_VERSION=1.3.2
 # Install dependent packages
 RUN apk update && \
     apk upgrade && \
-    apk add --no-cache make bash tar curl zip py-pip openssl jq && \
+    apk add --no-cache make bash tar curl zip openssl py-pip jq && \
     # Install azure cli
     apk add --no-cache --virtual=build gcc libffi-dev musl-dev openssl-dev python-dev && \
     pip --no-cache-dir install -U pip && \
@@ -23,14 +23,6 @@ RUN apk update && \
     apk add --no-cache strongswan 2>&1 && \
     # Install Istio(https://istio.io/docs/setup/)
     curl -L https://git.io/getLatestIstio | ISTIO_VERSION=1.3.2 sh -
-
-# tflint
-# RUN wget https://github.com/wata727/tflint/releases/download/v0.1.0/tflint_linux_amd64.zip && \
-#     unzip tflint_linux_amd64.zip && \
-#     mkdir -p /usr/local/tflint/bin && \
-#     install tflint /usr/local/tflint/bin && \
-#     rm -f tflint_linux_amd64.zip tflint && \
-#     echo "PATH=/usr/local/tflint/bin:$PATH" >> $HOME/.bashrc
 
 # work directory
 RUN mkdir -p ${VOLUME}
