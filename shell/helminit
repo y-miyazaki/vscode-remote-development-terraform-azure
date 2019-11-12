@@ -17,6 +17,7 @@ if [ $IS_TILLER_INSTALL -eq "0" ]; then
 else
     echo "Tiller already created."
 fi
+
 # Check Client
 IS_SET_HELM=$(helm version | grep Client | wc -l | tr -d '\n')
 if [ $IS_SET_HELM -eq "0" ]; then
@@ -33,4 +34,5 @@ do
     sleep 3
 done
 kubectl get serviceaccount -n kube-system | grep tiller
+helm version
 echo "Tiller server runs."
