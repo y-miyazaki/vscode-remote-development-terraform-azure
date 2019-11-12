@@ -16,10 +16,18 @@ if [ $IS_TILLER_INSTALL -eq "0" ]; then
     helm init --service-account tiller --node-selectors "beta.kubernetes.io/os"="linux"
 else
     echo "Tiller already created."
-#    helm init upgrade
 fi
+# Check Client
+while true
+do
+    IS_SET_HELM=$(helm version | grep Client | wc -l | tr -d '\n')
+    if [ $IS_SET_HELM -eq "1" ]; then
+        break
+    fi
+    sleep 3
+done
 
-# Check tiller
+# Check Server
 while true
 do
     IS_SET_HELM=$(helm version | grep Server | wc -l | tr -d '\n')
