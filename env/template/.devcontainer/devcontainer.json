@@ -1,16 +1,18 @@
 {
   "dockerFile": "../../../Dockerfile",
   "settings": {
-    "terraform.lintPath": "/usr/local/bin/tflint",
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "extensions": ["esbenp.prettier-vscode", "mauve.terraform", "ipedrazas.kubernetes-snippets", "technosophos.vscode-helm"],
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "mauve.terraform",
+    "ipedrazas.kubernetes-snippets",
+    "technosophos.vscode-helm"
+  ],
   "runArgs": [
     "-v",
     "${env:HOME}/##YOUR_WORKSPACE##:/workspace",
-    "--env-file=../.env.##ENV##",
-    "--name",
-    "terraform-azure-##ENV##"
+    "--env-file=.env"
   ],
   "workspaceFolder": "/workspace",
   "overrideCommand": false

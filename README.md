@@ -1,59 +1,72 @@
-VSCode Remote Development for Terraform azure
-===
+# VSCode Remote Development for Terraform azure
 
 ## Overview
-This repository used VSCode Remote Development and install Terraform/Google Cloud SDK 
+
+This repository used VSCode Remote Development and install Terraform/Google Cloud SDK
 
 ## Description
-### create devcontainer 
+
+### create devcontainer
+
 devcontainer used for VSCode Remote Development.  
 https://code.visualstudio.com/docs/remote/remote-overview
+
 ```bash
 $ cp -rp env/template env/{your environment}
 $ cat env/{your environment}/.devcontainer/devcontainer.json
 {
   "dockerFile": "../../../Dockerfile",
   "settings": {
-    "terraform.lintPath": "/usr/local/bin/tflint",
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "extensions": ["esbenp.prettier-vscode", "mauve.terraform", "ipedrazas.kubernetes-snippets", "technosophos.vscode-helm"],
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "mauve.terraform",
+    "ipedrazas.kubernetes-snippets",
+    "technosophos.vscode-helm"
+  ],
   "runArgs": [
     "-v",
     "${env:HOME}/##YOUR_WORKSPACE##:/workspace",
-    "--env-file=../.env.##ENV##",
-    "--name",
-    "terraform-azure-##ENV##"
+    "--env-file=.env"
   ],
   "workspaceFolder": "/workspace",
   "overrideCommand": false
 }
 ```
-### change devcontainer.json  
+
+### change devcontainer.json
+
 "##ENV##" and "##YOUR_WORKSPACE##" fix in devcontainer.json.
-1. ##YOUR_WORKSPACE## is your local directory for volume mount. If you want to absolute directory, don't need to ${env:HOME} value. 
-1. ##ENV## is environment value.
+
+1. ##YOUR_WORKSPACE## is your local directory for volume mount. If you want to absolute directory, don't need to \${env:HOME} value.
+
 ```json
 {
   "dockerFile": "../../../Dockerfile",
   "settings": {
-    "terraform.lintPath": "/usr/local/bin/tflint",
     "terminal.integrated.shell.linux": "/bin/bash"
   },
-  "extensions": ["esbenp.prettier-vscode", "mauve.terraform", "ipedrazas.kubernetes-snippets", "technosophos.vscode-helm"],
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "mauve.terraform",
+    "ipedrazas.kubernetes-snippets",
+    "technosophos.vscode-helm"
+  ],
   "runArgs": [
     "-v",
-    "${env:HOME}/workspace/hana_terraform:/workspace",
-    "--env-file=.env",
-    "--name",
-    "terraform-azure-development"
+    "${env:HOME}/workspace/terraform:/workspace",
+    "--env-file=.env"
   ],
   "workspaceFolder": "/workspace",
   "overrideCommand": false
 }
 ```
+
 ### fix env/{environment}/.env.
+
 You need to fix .env file.
+
 ```bash
 $ cat env/{environment}/.env
 # ENV uses terraform.${ENV}.tfvars file etc...
@@ -101,7 +114,9 @@ CONTAINER_NAME={container name}
 # az storage account keys list --resource-group ${RESOURCE_GROUP_NAME} --account-name ${STORAGE_ACCOUNT_NAME}  --query [0].value -o tsv
 ARM_ACCESS_KEY={storage account access key}
 ```
+
 Here is example.
+
 ```
 $ cat env/development/.env
 # ENV uses terraform.${ENV}.tfvars file etc...
@@ -150,55 +165,57 @@ ARM_ACCESS_KEY=xxxxxxxxxxxxx/xxxxxxxxx/xxxxxxxxxxxxxxxxxx==
 ```
 
 ## Supplement
+
 ### VSCode Remote Development
+
 You need to check this contents.  
 https://code.visualstudio.com/docs/remote/containers
 
 ### terraform version
-```bash
-bash-4.4# terraform -v
-Terraform v0.12.4
-+ provider.azuread v0.6.0
-+ provider.azurerm v1.33.0
 
-Your version of Terraform is out of date! The latest version
-is 0.12.7. You can update by downloading from www.terraform.io/downloads.html
+```bash
+bash-5.0# terraform -v
+Terraform v0.12.13
 ```
 
 ### az/helm/kubectl versions
-```
-bash-4.4# az --version
-azure-cli                         2.0.71 *
 
-command-modules-nspkg               2.0.3
-core                              2.0.71 *
+```
+bash-5.0# az --version
+azure-cli                         2.0.76
+
+command-modules-nspkg              2.0.3
+core                              2.0.76
 nspkg                              3.0.4
-telemetry                          1.0.3
+telemetry                          1.0.4
 
 Python location '/usr/bin/python'
 Extensions directory '/root/.azure/cliextensions'
 
-Python (Linux) 2.7.16 (default, May  6 2019, 19:35:26) 
+Python (Linux) 2.7.16 (default, May  6 2019, 19:28:45)
 [GCC 8.3.0]
 
 Legal docs and information: aka.ms/AzureCliLegal
 
 
+Your CLI is up-to-date.
 
-bash-4.4# helm version
-Client: &version.Version{SemVer:"v2.14.3", GitCommit:"0e7f3b6637f7af8fcfddb3d2941fcc7cbebb0085", GitTreeState:"clean"}
+
+bash-5.0# helm version
+Client: &version.Version{SemVer:"v2.16.0", GitCommit:"e13bc94621d4ef666270cfbe734aaabf342a49bb", GitTreeState:"clean"}
 Error: Get http://localhost:8080/api/v1/namespaces/kube-system/pods?labelSelector=app%3Dhelm%2Cname%3Dtiller: dial tcp 127.0.0.1:8080: connect: connection refused
 
 
-
 bash-4.4# kubectl version
-Client Version: version.Info{Major:"1", Minor:"15", GitVersion:"v1.15.3", GitCommit:"2d3c76f9091b6bec110a5e63777c332469e0cba2", GitTreeState:"clean", BuildDate:"2019-08-19T11:13:54Z", GoVersion:"go1.12.9", Compiler:"gc", Platform:"linux/amd64"}
+Client Version: version.Info{Major:"1", Minor:"16", GitVersion:"v1.16.2", GitCommit:"c97fe5036ef3df2967d086711e6c0c405941e14b", GitTreeState:"clean", BuildDate:"2019-10-15T19:18:23Z", GoVersion:"go1.12.10", Compiler:"gc", Platform:"linux/amd64"}
 The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 
 ## tf plan(terraform plan)
+
 if you set "IS_GENERATE_PROVIDER=1", this following command generates main_init.tf under current directory and action terraform plan.
 main_init.tf is created by tf command.
+
 ```bash
 $ tf plan
 Initializing modules...
@@ -246,8 +263,10 @@ provider "azuread" {
 ```
 
 ## tf apply(terraform apply)
+
 if you set "IS_GENERATE_PROVIDER=1", this following command generates main_init.tf under current directory and action terraform apply.
 main_init.tf is created by tf command.
+
 ```bash
 $ tf apply
 Initializing modules...
@@ -294,21 +313,23 @@ provider "azuread" {
 ```
 
 ## Required
+
 - Visual Code Studio Insiders  
-https://code.visualstudio.com/insiders/
-<!-- - Docker  
-https://docs.docker.com/install/ -->
+  https://code.visualstudio.com/insiders/
+  <!-- - Docker
+  https://docs.docker.com/install/ -->
 
 ## Link
+
 - Docker  
-https://www.docker.com/
+  https://www.docker.com/
 - Terraform  
-https://www.terraform.io/
+  https://www.terraform.io/
 - Azure CLI  
-https://docs.microsoft.com/ja-jp/cli/azure/?view=azure-cli-latest
+  https://docs.microsoft.com/ja-jp/cli/azure/?view=azure-cli-latest
 - Kubernetes  
-https://kubernetes.io/
+  https://kubernetes.io/
 - Helm  
-https://helm.sh/
+  https://helm.sh/
 
 ## Note
