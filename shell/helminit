@@ -18,11 +18,8 @@ else
     echo "Tiller already created."
 fi
 
-# Check Client
-IS_SET_HELM=$(helm version | grep Client | wc -l | tr -d '\n')
-if [ $IS_SET_HELM -eq "0" ]; then
-    helm init --client-only
-fi
+# helm init client
+helm init --client-only
 
 # Check Server
 while true
