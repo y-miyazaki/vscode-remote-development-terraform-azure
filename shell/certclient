@@ -7,7 +7,7 @@ set -e
 NAME=`basename $0`
 
 if [ $# -ne 2 ] ; then
-  echo "Usage: $NAME username password"
+  echo "USAGE: $NAME {username} {password}"
   exit 1
 fi
 

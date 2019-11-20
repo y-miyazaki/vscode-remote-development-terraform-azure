@@ -12,18 +12,37 @@ INSTALL_FLG=${1:-install}
 helminit
 
 if [ $INSTALL_FLG = "install" ]; then
-    helm init --client-only
     helm repo update
     # install istio
     helm repo add istio.io https://storage.googleapis.com/istio-release/releases/$ISTIO_VERSION/charts/
-    helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
-    # MTLS off
-    # helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio --name istio --namespace istio-system --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo.yaml
-    # MTLS on
-    helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio --name istio --namespace istio-system --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
+    echo "# ------------------------------------------------------------------------"
+    echo "# install istio"
+    echo "# ------------------------------------------------------------------------"
+    WC=`kubectl get crds | grep 'istio.io' | wc -l`
+    if [ $WC -eq 0 ]; then
+        helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
+        # MTLS off
+        # helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio --name istio --namespace istio-system --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo.yaml
+        # MTLS on
+        helm install
+        --set global.logging.level=warn \
+        /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio \
+        --name istio \
+        --namespace istio-system \
+        --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
+    else
+        echo "istio already installed."
+    fi
+    echo "# ------------------------------------------------------------------------"
+    echo "# crds list"
+    echo "# ------------------------------------------------------------------------"
     kubectl get crds | grep 'istio.io'
-
+    # upgrade command
+    # helm upgrade --install istio /istio-1.3.2/install/kubernetes/helm/istio --namespace istio-system  --set global.logging.level=warn --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
     # sidecar auto inject.
+    echo "# ------------------------------------------------------------------------"
+    echo "# enable istio injection"
+    echo "# ------------------------------------------------------------------------"
     kubectl label namespace default istio-injection=enabled --overwrite
     kubectl get namespace -L istio-injection
 elif [ $INSTALL_FLG = "uninstall" ]; then

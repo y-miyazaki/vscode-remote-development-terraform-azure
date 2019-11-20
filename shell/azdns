@@ -11,12 +11,12 @@ IP=$1
 DNSNAME=$2
 
 if [ -z $IP ]; then
-  echo "usage: ./${NAME} {public ip} {dns name}" 1>&2
+  echo "USAGE: ${NAME} {public ip} {dns name}" 1>&2
   exit 1
 fi
 
 if [ -z $DNSNAME ]; then
-  echo "usage: ./${NAME} {public ip} {dns name}" 1>&2
+  echo "USAGE: ${NAME} {public ip} {dns name}" 1>&2
   exit 1
 fi
 

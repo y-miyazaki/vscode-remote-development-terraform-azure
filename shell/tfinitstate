@@ -12,7 +12,7 @@ DAYS=7
 
 # usage function
 function usage () {
-  echo "usage: ${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
+  echo "USAGE: ${NAME} {service account name} {resource group name} {container name} {location} {is storage account name random suffix}" 1>&2
   exit 1
 }
 

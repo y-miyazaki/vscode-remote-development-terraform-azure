@@ -25,7 +25,7 @@ NAME=`basename $0`
 # usage function
 function usage () {
   echo "terraform needs $1 environment parameter."
-  echo "usage: ${NAME} {command...}" 1>&2
+  echo "USAGE: ${NAME} {command...}" 1>&2
   exit 1
 }
 

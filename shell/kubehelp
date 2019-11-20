@@ -73,3 +73,11 @@ echo "------------------------------------------------------------------------"
 echo "kubectl top {pod|top}"
 echo "ex) kubectl top node"
 echo -e "\n"
+
+echo "------------------------------------------------------------------------"
+echo "get yaml"
+echo "------------------------------------------------------------------------"
+echo "kubectl get {po|no|svc|rc|cronjob|job} -o yaml"
+echo "ex) kubectl get pod -o yaml"
+echo -e "\n"
+

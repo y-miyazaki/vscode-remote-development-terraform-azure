@@ -9,8 +9,9 @@ NAME=`basename $0`
 SAN=$1
 DIR=${2:-certs}
 
-if [ ! -n $SAN ]; then
-    echo "usage $NAME {SAN} {output directory}"
+if [ -z $SAN ]; then
+    echo "USAGE: $NAME {SAN file path} {output directory}"
+    echo "ex) $NAME ./san.txt ./certs"
     exit 1
 fi
 # make directory
