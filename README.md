@@ -175,7 +175,7 @@ https://code.visualstudio.com/docs/remote/containers
 
 ```bash
 bash-5.0# terraform -v
-Terraform v0.12.13
+Terraform v0.12.16
 ```
 
 ### az/helm/kubectl versions
