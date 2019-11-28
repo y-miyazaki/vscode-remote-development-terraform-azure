@@ -22,14 +22,17 @@ fi
 helm init --client-only
 
 # Check Server
-while true
+for ((i=0; i < 20; i++));
 do
     IS_SET_HELM=$(helm version | grep Server | wc -l | tr -d '\n')
     if [ $IS_SET_HELM -eq "1" ]; then
-        break
+        kubectl get serviceaccount -n kube-system | grep tiller
+        helm version
+        echo "Tiller server runs."
+        exit 0
     fi
     sleep 3
 done
-kubectl get serviceaccount -n kube-system | grep tiller
-helm version
-echo "Tiller server runs."
+
+echo "Tiller server can't ready..."
+exit 1
