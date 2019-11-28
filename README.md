@@ -2,7 +2,7 @@
 
 ## Overview
 
-This repository used VSCode Remote Development and install Terraform/Google Cloud SDK
+This repository used VSCode Remote Development and install Terraform/Azure CLI/kubectl/helm/istio/stern
 
 ## Description
 
