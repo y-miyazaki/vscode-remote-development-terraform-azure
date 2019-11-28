@@ -61,7 +61,11 @@ RUN az aks install-cli && \
     tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz && \
     mv linux-amd64/helm /usr/local/bin/helm && \
     chmod 775 /usr/local/bin/helm && \
-    rm -f helm-v${HELM_VERSION}-linux-amd64.tar.gz
+    rm -f helm-v${HELM_VERSION}-linux-amd64.tar.gz && \
+    # install stern
+    curl -LO https://github.com/wercker/stern/releases/download/1.11.0/stern_linux_amd64 && \
+    mv stern_linux_amd64 /usr/local/bin/stern && \
+    chmod 775 /usr/local/bin/stern
 
 ENTRYPOINT []
 CMD ["/usr/local/bin/cmd"]
