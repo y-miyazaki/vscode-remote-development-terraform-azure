@@ -13,7 +13,8 @@ NAME=`basename $0`
 ISTIO_VERSION=${ISTIO_VERSION:-1.3.2}
 NAMESPACE=istio-system
 INSTALL_FLG=${1:-install}
-MTLS=${2:-1}
+ISTIO_DIR=${2:-/istio-${ISTIO_VERSION}}
+MTLS=${3:-1}
 
 # install tiller
 helminit
@@ -27,36 +28,37 @@ if [ $INSTALL_FLG = "install" ]; then
     echo "# ------------------------------------------------------------------------"
     WC=`kubectl get crds | grep 'istio.io' | wc -l`
     if [ $WC -eq 0 ]; then
-        helm install /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
-        # MLTS on
-        if [ $MLTS -eq 1 ]; then
-            helm install \
-            --set global.logging.level=warn \
-            --set mixer.adapters.stdio.enabled=false \
-            /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio \
-            --name istio \
-            --namespace istio-system \
-            --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
-        # MLTS off
-        else
-            helm install \
-            --set global.logging.level=warn \
-            --set mixer.adapters.stdio.enabled=false \
-            /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio \
-            --name istio \
-            --namespace istio-system \
-            --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo.yaml
-        fi
-        # helm upgrade \
-        #   istio  \
-        #   /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio \
-        #   --set global.logging.level=warn \
-        #   --set mixer.adapters.stdio.enabled=false \
-        #   --namespace istio-system \
-        #   --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
+        helm install ${ISTIO_DIR}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
+        kubectl -n $NAMESPACE wait --for=condition=complete job --all
     else
-        echo "istio already installed."
+        echo "istio init already installed."
     fi
+    # MTLS on
+    if [ $MTLS -eq 1 ]; then
+        helm install \
+        --set global.logging.level=warn \
+        --set mixer.adapters.stdio.enabled=false \
+        ${ISTIO_DIR}/install/kubernetes/helm/istio \
+        --name istio \
+        --namespace $NAMESPACE \
+        --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
+    # MTLS off
+    else
+        helm install \
+        --set global.logging.level=warn \
+        --set mixer.adapters.stdio.enabled=false \
+        ${ISTIO_DIR}/install/kubernetes/helm/istio \
+        --name istio \
+        --namespace istio-system \
+        --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo.yaml
+    fi
+    # helm upgrade \
+    #   istio  \
+    #   /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio \
+    #   --set global.logging.level=warn \
+    #   --set mixer.adapters.stdio.enabled=false \
+    #   --namespace istio-system \
+    #   --values /istio-${ISTIO_VERSION}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
     echo "# ------------------------------------------------------------------------"
     echo "# crds list"
     echo "# ------------------------------------------------------------------------"
@@ -72,6 +74,7 @@ elif [ $INSTALL_FLG = "uninstall" ]; then
     helm delete --purge istio
     helm delete --purge istio-init
     helm delete --purge istio-cni
+    for i in ${ISTIO_DIR}/install/kubernetes/helm/istio-init/files/*crd*yaml; do kubectl delete -f $i; done
     kubectl delete namespace istio-system
     kubectl label namespace default istio-injection= --overwrite
     set -e

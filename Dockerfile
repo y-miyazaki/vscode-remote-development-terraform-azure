@@ -52,7 +52,7 @@ FROM azure-cli AS helm
 
 # ARG
 ARG VOLUME=/workspace
-ARG HELM_VERSION=2.16.0
+ARG HELM_VERSION=2.16.1
 
 # Install kubectl
 RUN az aks install-cli && \
