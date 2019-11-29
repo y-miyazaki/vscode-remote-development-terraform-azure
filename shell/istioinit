@@ -33,24 +33,27 @@ if [ $INSTALL_FLG = "install" ]; then
     else
         echo "istio init already installed."
     fi
+    WC=`kubectl get pods --all-namespaces | grep istio-pilot | wc -l`
     # MTLS on
-    if [ $MTLS -eq 1 ]; then
-        helm install \
-        --set global.logging.level=warn \
-        --set mixer.adapters.stdio.enabled=false \
-        ${ISTIO_DIR}/install/kubernetes/helm/istio \
-        --name istio \
-        --namespace $NAMESPACE \
-        --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
-    # MTLS off
-    else
-        helm install \
-        --set global.logging.level=warn \
-        --set mixer.adapters.stdio.enabled=false \
-        ${ISTIO_DIR}/install/kubernetes/helm/istio \
-        --name istio \
-        --namespace istio-system \
-        --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo.yaml
+    if [ $WC -eq 0 ]; then
+        if [ $MTLS -eq 1 ]; then
+            helm install \
+            --set global.logging.level=warn \
+            --set mixer.adapters.stdio.enabled=false \
+            ${ISTIO_DIR}/install/kubernetes/helm/istio \
+            --name istio \
+            --namespace $NAMESPACE \
+            --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
+        # MTLS off
+        else
+            helm install \
+            --set global.logging.level=warn \
+            --set mixer.adapters.stdio.enabled=false \
+            ${ISTIO_DIR}/install/kubernetes/helm/istio \
+            --name istio \
+            --namespace istio-system \
+            --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo.yaml
+        fi
     fi
     # helm upgrade \
     #   istio  \
@@ -63,6 +66,11 @@ if [ $INSTALL_FLG = "install" ]; then
     echo "# crds list"
     echo "# ------------------------------------------------------------------------"
     kubectl get crds | grep 'istio.io'
+
+    echo "# ------------------------------------------------------------------------"
+    echo "# istio pod list"
+    echo "# ------------------------------------------------------------------------"
+    kubectl get pods --all-namespaces | grep $NAMESPACE
 
     echo "# ------------------------------------------------------------------------"
     echo "# enable istio injection"
