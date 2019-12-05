@@ -37,15 +37,26 @@ if [ $INSTALL_FLG = "install" ]; then
     # MTLS on
     if [ $WC -eq 0 ]; then
         if [ $MTLS -eq 1 ]; then
+            # MTLS health check problem
+            # --set values.sidecarInjectorWebhook.rewriteAppHTTPProbe=true
+            # https://istio.io/docs/ops/configuration/mesh/app-health-check/
+
+            # Too many log problem
+            # --set global.logging.level=warn \
+            # --set mixer.adapters.stdio.enabled=false \
             helm install \
             --set global.logging.level=warn \
             --set mixer.adapters.stdio.enabled=false \
+            --set values.sidecarInjectorWebhook.rewriteAppHTTPProbe=true \
             ${ISTIO_DIR}/install/kubernetes/helm/istio \
             --name istio \
             --namespace $NAMESPACE \
             --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
         # MTLS off
         else
+            # Too many log problem
+            # --set global.logging.level=warn \
+            # --set mixer.adapters.stdio.enabled=false \
             helm install \
             --set global.logging.level=warn \
             --set mixer.adapters.stdio.enabled=false \
