@@ -77,7 +77,7 @@ FROM helm AS istio
 
 # ARG
 ARG VOLUME=/workspace
-ARG ISTIO_VERSION=1.3.2
+ARG ISTIO_VERSION=1.3.5
 
 # ENV
 # for istio

@@ -10,26 +10,35 @@ set -e
 # variables
 # ------------------------------------------------------------------------
 NAME=`basename $0`
-ISTIO_VERSION=${ISTIO_VERSION:-1.3.2}
+ISTIO_VERSION=${ISTIO_VERSION:-1.3.5}
 NAMESPACE=istio-system
 INSTALL_FLG=${1:-install}
-ISTIO_DIR=${2:-/istio-${ISTIO_VERSION}}
-MTLS=${3:-1}
+ISTIO_DIR=${3:-/istio-${ISTIO_VERSION}}
+MTLS=${4:-1}
+TRACING_ENABLED=false
+if [ -z $2 ]; then
+    EXTERNAL_IP=
+else
+    EXTERNAL_IP="--set gateways.istio-ingressgateway.loadBalancerIP=$2"
+fi
 
 # install tiller
 helminit
 
 if [ $INSTALL_FLG = "install" ]; then
-    helm repo update
     # install istio
     helm repo add istio.io https://storage.googleapis.com/istio-release/releases/$ISTIO_VERSION/charts/
+    helm repo update
     echo "# ------------------------------------------------------------------------"
     echo "# install istio"
     echo "# ------------------------------------------------------------------------"
     WC=`kubectl get crds | grep 'istio.io' | wc -l`
     if [ $WC -eq 0 ]; then
-        helm install ${ISTIO_DIR}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
+        # helm install ${ISTIO_DIR}/install/kubernetes/helm/istio-init --name istio-init --namespace $NAMESPACE
+        helm install istio.io/istio-init --name istio-init --namespace $NAMESPACE
+        echo "----------check job condition start...----------"
         kubectl -n $NAMESPACE wait --for=condition=complete job --all
+        echo "----------check job condition finished.----------"
     else
         echo "istio init already installed."
     fi
@@ -40,30 +49,36 @@ if [ $INSTALL_FLG = "install" ]; then
             # MTLS health check problem
             # --set values.sidecarInjectorWebhook.rewriteAppHTTPProbe=true
             # https://istio.io/docs/ops/configuration/mesh/app-health-check/
+            # --set values.sidecarInjectorWebhook.rewriteAppHTTPProbe=true \
 
             # Too many log problem
             # --set global.logging.level=warn \
             # --set mixer.adapters.stdio.enabled=false \
-            helm install \
-            --set global.logging.level=warn \
-            --set mixer.adapters.stdio.enabled=false \
-            --set values.sidecarInjectorWebhook.rewriteAppHTTPProbe=true \
-            ${ISTIO_DIR}/install/kubernetes/helm/istio \
-            --name istio \
-            --namespace $NAMESPACE \
-            --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo-auth.yaml
+            helm install istio.io/istio --name istio --namespace $NAMESPACE --version $ISTIO_VERSION $EXTERNAL_IP \
+                --set global.logging.level=warn \
+                --set mixer.adapters.stdio.enabled=false \
+                --set values.sidecarInjectorWebhook.rewriteAppHTTPProbe=true \
+                --set global.controlPlaneSecurityEnabled=true \
+                --set global.mtls.enabled=true \
+                --set grafana.enabled=true --set grafana.security.enabled=false \
+                --set tracing.enabled=$TRACING_ENABLED \
+                --set kiali.enabled=true \
+                --set global.defaultNodeSelector."beta\.kubernetes\.io/os"=linux
         # MTLS off
         else
             # Too many log problem
             # --set global.logging.level=warn \
             # --set mixer.adapters.stdio.enabled=false \
-            helm install \
-            --set global.logging.level=warn \
-            --set mixer.adapters.stdio.enabled=false \
-            ${ISTIO_DIR}/install/kubernetes/helm/istio \
-            --name istio \
-            --namespace istio-system \
-            --values ${ISTIO_DIR}/install/kubernetes/helm/istio/values-istio-demo.yaml
+            helm install istio.io/istio --name istio --namespace $NAMESPACE --version $ISTIO_VERSION $EXTERNAL_IP \
+                --set global.logging.level=warn \
+                --set mixer.adapters.stdio.enabled=false \
+                --set values.sidecarInjectorWebhook.rewriteAppHTTPProbe=false \
+                --set global.controlPlaneSecurityEnabled=true \
+                --set global.mtls.enabled=false \
+                --set grafana.enabled=true --set grafana.security.enabled=false \
+                --set tracing.enabled=$TRACING_ENABLED \
+                --set kiali.enabled=true \
+                --set global.defaultNodeSelector."beta\.kubernetes\.io/os"=linux
         fi
     fi
     # helm upgrade \
@@ -94,7 +109,7 @@ elif [ $INSTALL_FLG = "uninstall" ]; then
     helm delete --purge istio-init
     helm delete --purge istio-cni
     for i in ${ISTIO_DIR}/install/kubernetes/helm/istio-init/files/*crd*yaml; do kubectl delete -f $i; done
-    kubectl delete namespace istio-system
+    kubectl delete namespace $NAMESPACE
     kubectl label namespace default istio-injection= --overwrite
     set -e
 fi
