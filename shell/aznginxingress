@@ -78,7 +78,9 @@ if [ "$CMD" = "install" ]; then
   if [ $WC -eq 0 ]; then
     if [ $CERT_MANAGER -eq 1 ]; then
       # Install the CustomResourceDefinition resources separately
-      kubectl apply -f https://raw.githubusercontent.com/jetstack/cert-manager/release-${CERT_MANAGER_VERSION}/deploy/manifests/00-crds.yaml
+      # see document.
+      # https://cert-manager.io/docs/installation/kubernetes/
+      kubectl apply --validate=false -f https://raw.githubusercontent.com/jetstack/cert-manager/release-${CERT_MANAGER_VERSION}/deploy/manifests/00-crds.yaml
       # Create the namespace for cert-manager
       WC=`kubectl get ns | grep "${CERT_MANAGER_NAMESPACE}" | wc -l`
       if [ $WC -eq 0 ]; then
