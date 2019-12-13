@@ -6,9 +6,10 @@ FROM hashicorp/terraform:${TERRAFORM_VERSION} AS base
 
 # ARG
 ARG VOLUME=/workspace
+ARG CLOUD_COMMANDS_VERSION=0.0.2
 # ENV
 ENV VOLUME /workspace
-
+ENV PATH=/usr/local/bin/azure:/usr/local/bin/kubernetes:/usr/local/bin/others:$PATH
 # Install dependent packages
 RUN apk update && \
     apk add --no-cache make bash tar curl zip openssl py-pip
@@ -17,18 +18,20 @@ RUN apk update && \
 RUN mkdir -p ${VOLUME}
 WORKDIR ${VOLUME}
 
-# setting shells
-ADD ./shell /shell
-RUN chmod 775 /shell/* && \
-    mv /shell/* /usr/local/bin/ && \
-    rm -rf /shell
+# setting commands
+RUN git clone --depth 1 -b v${CLOUD_COMMANDS_VERSION} https://github.com/y-miyazaki/cloud-commands.git && \
+    mv cloud-commands/cmd/* /usr/local/bin/ && \
+    chmod 775 /usr/local/bin/azure/* && \
+    chmod 775 /usr/local/bin/kubernetes/* && \
+    chmod 775 /usr/local/bin/others/* && \
+    rm -rf cloud-command
 
 # CMD
 ENTRYPOINT []
-CMD ["/usr/local/bin/cmd"]
+CMD ["/usr/local/bin/azure/cmd"]
 
 #--------------------------------------------------------------
-# azure-cli build image
+# install azure-cli build image
 #--------------------------------------------------------------
 FROM base AS azure-cli
 
@@ -42,8 +45,7 @@ RUN apk add --no-cache --virtual=build gcc libffi-dev musl-dev openssl-dev pytho
     apk del --purge build
 
 # CMD
-ENTRYPOINT []
-CMD ["/usr/local/bin/cmd"]
+CMD ["/usr/local/bin/azure/cmd"]
 
 #--------------------------------------------------------------
 # helm build image
@@ -53,6 +55,7 @@ FROM azure-cli AS helm
 # ARG
 ARG VOLUME=/workspace
 ARG HELM_VERSION=2.16.1
+ARG STERN_VERSION=1.11.0
 
 # Install kubectl
 RUN az aks install-cli && \
@@ -63,12 +66,12 @@ RUN az aks install-cli && \
     chmod 775 /usr/local/bin/helm && \
     rm -f helm-v${HELM_VERSION}-linux-amd64.tar.gz && \
     # install stern
-    curl -LO https://github.com/wercker/stern/releases/download/1.11.0/stern_linux_amd64 && \
+    curl -LO https://github.com/wercker/stern/releases/download/${STERN_VERSION}/stern_linux_amd64 && \
     mv stern_linux_amd64 /usr/local/bin/stern && \
     chmod 775 /usr/local/bin/stern
 
 ENTRYPOINT []
-CMD ["/usr/local/bin/cmd"]
+CMD ["/usr/local/bin/azure/cmd"]
 
 #--------------------------------------------------------------
 # istio build image
@@ -90,4 +93,4 @@ RUN apk add --no-cache strongswan 2>&1 && \
     cd / && curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${ISTIO_VERSION} sh -
 
 ENTRYPOINT []
-CMD ["/usr/local/bin/cmd"]
+CMD ["/usr/local/bin/azure/cmd"]
