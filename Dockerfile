@@ -44,6 +44,7 @@ RUN apk add --no-cache --virtual=build gcc libffi-dev musl-dev openssl-dev pytho
     pip --no-cache-dir install azure-cli && \
     apk del --purge build
 
+ENTRYPOINT []
 # CMD
 CMD ["/usr/local/bin/azure/cmd"]
 
