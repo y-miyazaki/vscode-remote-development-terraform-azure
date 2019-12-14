@@ -175,7 +175,7 @@ https://code.visualstudio.com/docs/remote/containers
 
 ```bash
 bash-5.0# terraform -v
-Terraform v0.12.16
+Terraform v0.12.18
 ```
 
 ### az/helm/kubectl versions
@@ -210,13 +210,13 @@ Client Version: version.Info{Major:"1", Minor:"16", GitVersion:"v1.16.3", GitCom
 The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 
-## tf plan(terraform plan)
+## aztf plan(terraform plan)
 
 if you set "IS_GENERATE_PROVIDER=1", this following command generates main_init.tf under current directory and action terraform plan.
-main_init.tf is created by tf command.
+main_init.tf is created by aztf command.
 
 ```bash
-$ tf plan
+$ aztf plan
 Initializing modules...
 
 Initializing the backend...
@@ -236,7 +236,6 @@ actions need to be performed.
 $ cat main_init.tf
 #--------------------------------------------------------------
 # main_init.tf must be not touch! because main_init.tf is auto generate file.
-# If you want to fix it, you should be fix /shell/files/main.template.tf.
 #--------------------------------------------------------------
 
 #--------------------------------------------------------------
@@ -261,13 +260,13 @@ provider "azuread" {
 }
 ```
 
-## tf apply(terraform apply)
+## aztf apply(terraform apply)
 
 if you set "IS_GENERATE_PROVIDER=1", this following command generates main_init.tf under current directory and action terraform apply.
-main_init.tf is created by tf command.
+main_init.tf is created by aztf command.
 
 ```bash
-$ tf apply
+$ aztf apply
 Initializing modules...
 
 Initializing the backend...
@@ -286,7 +285,6 @@ actions need to be performed.
 $ cat main_init.tf
 #--------------------------------------------------------------
 # main_init.tf must be not touch! because main_init.tf is auto generate file.
-# If you want to fix it, you should be fix /shell/files/main.template.tf.
 #--------------------------------------------------------------
 
 #--------------------------------------------------------------

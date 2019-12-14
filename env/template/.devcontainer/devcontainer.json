@@ -5,6 +5,7 @@
   },
   "extensions": [
     "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
     "ipedrazas.kubernetes-snippets",
     "technosophos.vscode-helm"

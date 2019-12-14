@@ -1,34 +1,32 @@
 #--------------------------------------------------------------
 # base build image
 #--------------------------------------------------------------
-ARG TERRAFORM_VERSION=0.12.16
+ARG TERRAFORM_VERSION=0.12.18
 FROM hashicorp/terraform:${TERRAFORM_VERSION} AS base
 
 # ARG
 ARG VOLUME=/workspace
-ARG CLOUD_COMMANDS_VERSION=0.0.2
+ARG CLOUD_COMMANDS_VERSION=0.1.0
+
 # ENV
 ENV VOLUME /workspace
-ENV PATH=/usr/local/bin/azure:/usr/local/bin/kubernetes:/usr/local/bin/others:$PATH
+
 # Install dependent packages
 RUN apk update && \
     apk add --no-cache make bash tar curl zip openssl py-pip
+
+# setting commands
+RUN git clone --depth 1 -b v${CLOUD_COMMANDS_VERSION} https://github.com/y-miyazaki/cloud-commands.git && \
+    cloud-commands/install.sh && \
+    rm -rf cloud-command
 
 # work directory
 RUN mkdir -p ${VOLUME}
 WORKDIR ${VOLUME}
 
-# setting commands
-RUN git clone --depth 1 -b v${CLOUD_COMMANDS_VERSION} https://github.com/y-miyazaki/cloud-commands.git && \
-    mv cloud-commands/cmd/* /usr/local/bin/ && \
-    chmod 775 /usr/local/bin/azure/* && \
-    chmod 775 /usr/local/bin/kubernetes/* && \
-    chmod 775 /usr/local/bin/others/* && \
-    rm -rf cloud-command
-
 # CMD
 ENTRYPOINT []
-CMD ["/usr/local/bin/azure/cmd"]
+CMD ["/usr/local/bin/azdockercmd"]
 
 #--------------------------------------------------------------
 # install azure-cli build image
@@ -46,7 +44,7 @@ RUN apk add --no-cache --virtual=build gcc libffi-dev musl-dev openssl-dev pytho
 
 ENTRYPOINT []
 # CMD
-CMD ["/usr/local/bin/azure/cmd"]
+CMD ["/usr/local/bin/azdockercmd"]
 
 #--------------------------------------------------------------
 # helm build image
@@ -72,7 +70,7 @@ RUN az aks install-cli && \
     chmod 775 /usr/local/bin/stern
 
 ENTRYPOINT []
-CMD ["/usr/local/bin/azure/cmd"]
+CMD ["/usr/local/bin/azdockercmd"]
 
 #--------------------------------------------------------------
 # istio build image
@@ -94,4 +92,4 @@ RUN apk add --no-cache strongswan 2>&1 && \
     cd / && curl -L https://git.io/getLatestIstio | ISTIO_VERSION=${ISTIO_VERSION} sh -
 
 ENTRYPOINT []
-CMD ["/usr/local/bin/azure/cmd"]
+CMD ["/usr/local/bin/azdockercmd"]
