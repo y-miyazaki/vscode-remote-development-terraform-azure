@@ -11,7 +11,7 @@ This repository used VSCode Remote Development and install Terraform/Azure CLI/k
 devcontainer used for VSCode Remote Development.  
 https://code.visualstudio.com/docs/remote/remote-overview
 
-```bash
+```json
 $ cp -rp env/template env/{your environment}
 $ cat env/{your environment}/.devcontainer/devcontainer.json
 {
@@ -21,6 +21,7 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
   },
   "extensions": [
     "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
     "ipedrazas.kubernetes-snippets",
     "technosophos.vscode-helm"
@@ -49,6 +50,7 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
   },
   "extensions": [
     "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
     "ipedrazas.kubernetes-snippets",
     "technosophos.vscode-helm"
@@ -67,7 +69,7 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
 
 You need to fix .env file.
 
-```bash
+```shell
 $ cat env/{environment}/.env
 # ENV uses terraform.${ENV}.tfvars file etc...
 ENV={development|staging|production..etc}
@@ -117,7 +119,7 @@ ARM_ACCESS_KEY={storage account access key}
 
 Here is example.
 
-```
+```shell
 $ cat env/development/.env
 # ENV uses terraform.${ENV}.tfvars file etc...
 ENV=development
@@ -328,5 +330,7 @@ provider "azuread" {
   https://kubernetes.io/
 - Helm  
   https://helm.sh/
+- Stern  
+  https://github.com/wercker/stern
 
 ## Note
