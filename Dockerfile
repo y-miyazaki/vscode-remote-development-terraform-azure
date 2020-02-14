@@ -6,17 +6,16 @@ FROM hashicorp/terraform:${TERRAFORM_VERSION} AS base
 
 # ARG
 ARG VOLUME=/workspace
-ARG CLOUD_COMMANDS_VERSION=0.1.6
+ARG CLOUD_COMMANDS_VERSION=0.1.10
 
 # ENV
 ENV VOLUME /workspace
 
 # Install dependent packages
 RUN apk update && \
-    apk add --no-cache make bash tar curl zip openssl py-pip
-
-# setting commands
-RUN git clone --depth 1 -b v${CLOUD_COMMANDS_VERSION} https://github.com/y-miyazaki/cloud-commands.git && \
+    apk add --no-cache make bash tar curl zip openssl py-pip && \
+    # setting commands
+    git clone --depth 1 -b v${CLOUD_COMMANDS_VERSION} https://github.com/y-miyazaki/cloud-commands.git && \
     cloud-commands/install.sh && \
     rm -rf cloud-command
 
