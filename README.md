@@ -313,8 +313,8 @@ provider "azuread" {
 
 ## Required
 
-- Visual Code Studio Insiders  
-  https://code.visualstudio.com/insiders/
+- Visual Code Studio
+  https://code.visualstudio.com/download
 - Docker  
   https://www.docker.com/
 
