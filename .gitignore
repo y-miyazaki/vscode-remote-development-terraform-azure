@@ -2,3 +2,4 @@
 # environment
 env/*
 !env/template
+!env/template_helm

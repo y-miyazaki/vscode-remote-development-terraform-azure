@@ -1,0 +1,20 @@
+{
+  "dockerFile": "../../../docker/helm/Dockerfile",
+  "settings": {
+    "terminal.integrated.shell.linux": "/bin/bash"
+  },
+  "extensions": [
+    "esbenp.prettier-vscode",
+    "streetsidesoftware.code-spell-checker",
+    "mauve.terraform",
+    "ipedrazas.kubernetes-snippets",
+    "technosophos.vscode-helm"
+  ],
+  "runArgs": [
+    "-v",
+    "${env:HOME}/##YOUR_WORKSPACE##:/workspace",
+    "--env-file=.env"
+  ],
+  "workspaceFolder": "/workspace",
+  "overrideCommand": false
+}
