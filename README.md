@@ -172,7 +172,7 @@ https://code.visualstudio.com/docs/remote/containers
 
 ```bash
 bash-5.0# terraform -v
-Terraform v0.12.18
+Terraform v0.12.23
 ```
 
 ### az versions
