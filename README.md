@@ -2,8 +2,7 @@
 
 ## Overview
 
-This repository used VSCode Remote Development and install Terraform/Azure CLI/kubectl/helm/istio/stern
-
+This repository used VSCode Remote Development and install Terraform/Azure CLI
 ## Description
 
 ### create devcontainer
@@ -15,7 +14,7 @@ https://code.visualstudio.com/docs/remote/remote-overview
 $ cp -rp env/template env/{your environment}
 $ cat env/{your environment}/.devcontainer/devcontainer.json
 {
-  "dockerFile": "../../../Dockerfile",
+  "dockerFile": "../../../docker/default/Dockerfile",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
@@ -23,8 +22,6 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
-    "ipedrazas.kubernetes-snippets",
-    "technosophos.vscode-helm"
   ],
   "runArgs": [
     "-v",
@@ -44,7 +41,7 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
 
 ```json
 {
-  "dockerFile": "../../../Dockerfile",
+  "dockerFile": "../../../docker/default/Dockerfile",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
@@ -52,8 +49,6 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "esbenp.prettier-vscode",
     "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
-    "ipedrazas.kubernetes-snippets",
-    "technosophos.vscode-helm"
   ],
   "runArgs": [
     "-v",
@@ -180,7 +175,7 @@ bash-5.0# terraform -v
 Terraform v0.12.18
 ```
 
-### az/helm/kubectl versions
+### az versions
 
 ```
 bash-5.0# az --version
@@ -201,15 +196,6 @@ Legal docs and information: aka.ms/AzureCliLegal
 
 
 Your CLI is up-to-date.
-
-
-bash-5.0# helm version
-Client: &version.Version{SemVer:"v2.16.0", GitCommit:"e13bc94621d4ef666270cfbe734aaabf342a49bb", GitTreeState:"clean"}
-Error: Get http://localhost:8080/api/v1/namespaces/kube-system/pods?labelSelector=app%3Dhelm%2Cname%3Dtiller: dial tcp 127.0.0.1:8080: connect: connection refused
-
-bash-4.4# kubectl version
-Client Version: version.Info{Major:"1", Minor:"16", GitVersion:"v1.16.3", GitCommit:"b3cbbae08ec52a7fc73d334838e18d17e8512749", GitTreeState:"clean", BuildDate:"2019-11-13T11:23:11Z", GoVersion:"go1.12.12", Compiler:"gc", Platform:"linux/amd64"}
-The connection to the server localhost:8080 was refused - did you specify the right host or port?
 ```
 
 ## aztf plan(terraform plan)
