@@ -1,0 +1,44 @@
+{
+    "editor.fontSize": 16, // font size
+    "editor.suggestFontSize": 16, // サジェストの文字サイズ
+    "editor.tabSize": 4, // tab size
+    "editor.insertSpaces": true, // Tabキーで半角スペースを入力
+    "editor.letterSpacing": -1, // 文字の間隔を詰める
+    "editor.formatOnPaste": false, // コード整形
+    "editor.formatOnType": false, // コード整形
+    "editor.formatOnSave": true, // format on save
+    "editor.folding": true, // コードの折りたたみを許可
+    "editor.hover.sticky": false,
+    "editor.renderLineHighlight": "all", // 選択中の行を強調する
+    "editor.minimap.enabled": false, // minimap
+    "editor.minimap.maxColumn": 40, // ミニマップの幅
+    "editor.minimap.renderCharacters": false, // ミニマップを簡略化
+    "editor.minimap.showSlider": "always", // ミニマップのハイライトを常に表示
+    "editor.minimap.side": "right", // ミニマップを右に表示
+    "editor.lineNumbers": "on", // 行番号の表示
+    "editor.links": true, // リンクをクリック可能に
+    "editor.matchBrackets": true, // 対応する括弧の強調表示をオンに
+    "files.encoding": "utf8", // 既定の文字コード
+    "explorer.confirmDragAndDrop": false,
+    "breadcrumbs.enabled": true, // パンくずリスト
+    "terminal.integrated.shell.linux": "/bin/bash", // terminal default bash
+    "terminal.integrated.scrollback": 10000, // terminal scrollback
+    "workbench.startupEditor": "newUntitledFile", // startup empty file.
+    "window.zoomLevel": 0,
+    "cSpell.language": "en,en-GB",
+    "cSpell.userWords": [
+        "kubernetes",
+        "dockle",
+        "trivy",
+        "cobertura",
+        "azurecr",
+        "bson",
+        "uuid",
+        "mongodb"
+    ],
+    // for Terraform
+    "terraform.languageServer": {
+        "enabled": true,
+        "args": []
+    }
+}

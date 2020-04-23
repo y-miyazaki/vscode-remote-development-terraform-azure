@@ -1,5 +1,5 @@
 {
-  "dockerFile": "../../../Dockerfile",
+  "dockerFile": "../../../docker/default/Dockerfile",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
