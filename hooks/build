@@ -1,0 +1,8 @@
+#!/bin/bash
+set -eu
+
+if [ "$DOCKER_TAG" == "latest" ]; then
+    docker build . --build-arg -t ${IMAGE_NAME}
+else
+    docker build . --build-arg TERRAFORM_VERSION=${DOCKER_TAG} -t ${IMAGE_NAME}
+fi

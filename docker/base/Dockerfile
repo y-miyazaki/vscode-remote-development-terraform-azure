@@ -1,7 +1,7 @@
 #--------------------------------------------------------------
 # base build image
 #--------------------------------------------------------------
-ARG TERRAFORM_VERSION=0.12.23
+ARG TERRAFORM_VERSION=latest
 FROM hashicorp/terraform:${TERRAFORM_VERSION} AS base
 
 # ARG
