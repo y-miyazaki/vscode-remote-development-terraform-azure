@@ -1,72 +1,72 @@
 {
-	"tf-dynamic": {
-		"prefix": "dynamic",
-		"body": [
-			"dynamic \"${1:attribute}\" {",
-			"  for_each = var.${1:attribute}",
-			"  content {",
-			"    name = lookup(${1:attribute}.value, \"name\", null)",
-			"  }",
-			"}"
-		],
-		"description": "dynamic block"
-	},
-	"tf-attr": {
-		"prefix": "attr",
-		"body": [
-			"${1:name} = \"\\${var.${1:name}\\}\"",
-		],
-		"description": "attribute"
-	},
-	"tf-attrlook": {
-		"prefix": "attrlook",
-		"body": [
-			"${name} = \"${lookup(var.${key}, \"${name}\")}\"",
-		],
-		"description": "attribute lookup"
-	},
-	"tf-varstring": {
-		"prefix": "varstring",
-		"body": [
-			"variable \"${attribute}\" {",
-			"  type        = string",
-			"  description = \"\"",
-			"  default     = null",
-			"}"
-		],
-		"description": "variable string"
-	},
-	"tf-varlist": {
-		"prefix": "varlist",
-		"body": [
-			"variable \"${attribute}\" {",
-			"  type        = list",
-			"  description = \"\"",
-			"  default     = []",
-			"}"
-		],
-		"description": "variable list"
-	},
-	"tf-varmap": {
-		"prefix": "varmap",
-		"body": [
-			"variable \"${attribute}\" {",
-			"  type        = map",
-			"  description = \"\"",
-			"  default     = null",
-			"}"
-		],
-		"description": "variable map"
-	},
-	"tf-varnumber": {
-		"prefix": "varnumber",
-		"body": [
-			"variable \"${attribute}\" {",
-			"  type        = number",
-			"  description = \"\"",
-			"  default     = 0",
-			"}"
-		],
-		"description": "variable string"
-	}
+  "tf-dynamic": {
+    "prefix": "dynamic",
+    "body": [
+      "dynamic \"${1:attribute}\" {",
+      "  for_each = var.${1:attribute}",
+      "  content {",
+      "    name = lookup(${1:attribute}.value, \"name\", null)",
+      "  }",
+      "}"
+    ],
+    "description": "dynamic block"
+  },
+  "tf-attr": {
+    "prefix": "attr",
+    "body": [
+      "${1:name} = \"\\${var.${1:name}\\}\"",
+    ],
+    "description": "attribute"
+  },
+  "tf-attrlook": {
+    "prefix": "attrlook",
+    "body": [
+      "${name} = \"${lookup(var.${key}, \"${name}\")}\"",
+    ],
+    "description": "attribute lookup"
+  },
+  "tf-varstring": {
+    "prefix": "varstring",
+    "body": [
+      "variable \"${attribute}\" {",
+      "  type        = string",
+      "  description = \"\"",
+      "  default     = null",
+      "}"
+    ],
+    "description": "variable string"
+  },
+  "tf-varlist": {
+    "prefix": "varlist",
+    "body": [
+      "variable \"${attribute}\" {",
+      "  type        = list",
+      "  description = \"\"",
+      "  default     = []",
+      "}"
+    ],
+    "description": "variable list"
+  },
+  "tf-varmap": {
+    "prefix": "varmap",
+    "body": [
+      "variable \"${attribute}\" {",
+      "  type        = map",
+      "  description = \"\"",
+      "  default     = null",
+      "}"
+    ],
+    "description": "variable map"
+  },
+  "tf-varnumber": {
+    "prefix": "varnumber",
+    "body": [
+      "variable \"${attribute}\" {",
+      "  type        = number",
+      "  description = \"\"",
+      "  default     = 0",
+      "}"
+    ],
+    "description": "variable string"
+  }
 }

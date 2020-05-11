@@ -7,7 +7,7 @@ This repository used VSCode Remote Development and install Terraform/Azure CLI
 
 ### create devcontainer
 
-devcontainer used for VSCode Remote Development.  
+devcontainer used for VSCode Remote Development.
 https://code.visualstudio.com/docs/remote/remote-overview
 
 ```json
@@ -19,9 +19,13 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "terminal.integrated.shell.linux": "/bin/bash"
   },
   "extensions": [
-    "esbenp.prettier-vscode",
-    "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
+    "coenraads.bracket-pair-colorizer-2",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "ibm.output-colorizer",
+    "streetsidesoftware.code-spell-checker",
+    "vscode-icons-team.vscode-icons",
   ],
   "runArgs": [
     "-v",
@@ -46,9 +50,13 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "terminal.integrated.shell.linux": "/bin/bash"
   },
   "extensions": [
-    "esbenp.prettier-vscode",
-    "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
+    "coenraads.bracket-pair-colorizer-2",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "ibm.output-colorizer",
+    "streetsidesoftware.code-spell-checker",
+    "vscode-icons-team.vscode-icons",
   ],
   "runArgs": [
     "-v",
@@ -165,7 +173,7 @@ ARM_ACCESS_KEY=xxxxxxxxxxxxx/xxxxxxxxx/xxxxxxxxxxxxxxxxxx==
 
 ### VSCode Remote Development
 
-You need to check this contents.  
+You need to check this contents.
 https://code.visualstudio.com/docs/remote/containers
 
 ### terraform version
@@ -301,22 +309,22 @@ provider "azuread" {
 
 - Visual Code Studio
   https://code.visualstudio.com/download
-- Docker  
+- Docker
   https://www.docker.com/
 
 ## Other Link
 
-- Docker  
+- Docker
   https://www.docker.com/
-- Terraform  
+- Terraform
   https://www.terraform.io/
-- Azure CLI  
+- Azure CLI
   https://docs.microsoft.com/ja-jp/cli/azure/?view=azure-cli-latest
-- Kubernetes  
+- Kubernetes
   https://kubernetes.io/
-- Helm  
+- Helm
   https://helm.sh/
-- Stern  
+- Stern
   https://github.com/wercker/stern
 
 ## Note

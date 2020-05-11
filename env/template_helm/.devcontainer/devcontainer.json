@@ -4,11 +4,15 @@
     "terminal.integrated.shell.linux": "/bin/bash"
   },
   "extensions": [
-    "esbenp.prettier-vscode",
-    "streetsidesoftware.code-spell-checker",
     "mauve.terraform",
     "ipedrazas.kubernetes-snippets",
-    "technosophos.vscode-helm"
+    "technosophos.vscode-helm",
+    "coenraads.bracket-pair-colorizer-2",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "ibm.output-colorizer",
+    "streetsidesoftware.code-spell-checker",
+    "vscode-icons-team.vscode-icons",
   ],
   "runArgs": [
     "-v",
