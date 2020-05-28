@@ -1,5 +1,5 @@
 {
-  "dockerFile": "../../../docker/default/Dockerfile",
+  "image": "registry.hub.docker.com/ymiyazakixyz/ymiyazakixyz/terraform-azure:latest",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
@@ -7,6 +7,7 @@
     "mauve.terraform",
     "coenraads.bracket-pair-colorizer-2",
     "eamodio.gitlens",
+    "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "ibm.output-colorizer",
     "streetsidesoftware.code-spell-checker",

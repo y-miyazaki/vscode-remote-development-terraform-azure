@@ -14,7 +14,7 @@ https://code.visualstudio.com/docs/remote/remote-overview
 $ cp -rp env/template env/{your environment}
 $ cat env/{your environment}/.devcontainer/devcontainer.json
 {
-  "dockerFile": "../../../docker/default/Dockerfile",
+  "image": "registry.hub.docker.com/ymiyazakixyz/ymiyazakixyz/terraform-azure:latest",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
@@ -22,6 +22,7 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "mauve.terraform",
     "coenraads.bracket-pair-colorizer-2",
     "eamodio.gitlens",
+    "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "ibm.output-colorizer",
     "streetsidesoftware.code-spell-checker",
@@ -68,12 +69,15 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
 }
 ```
 
-### fix env/{environment}/.env.
+### env/template/.env
 
 You need to fix .env file.
 
 ```shell
-$ cat env/{environment}/.env
+$ cat env/template/.env
+#---------------------------------------------------------
+# base
+#---------------------------------------------------------
 # ENV uses terraform.${ENV}.tfvars file etc...
 ENV={development|staging|production..etc}
 
@@ -82,8 +86,8 @@ ENV={development|staging|production..etc}
 IS_GENERATE_PROVIDER={0|1}
 
 #---------------------------------------------------------
-# see
-# https://docs.microsoft.com/ja-jp/azure/virtual-machines/linux/terraform-install-configure
+# Install and configure Terraform to provision Azure resources
+# https://docs.microsoft.com/azure/virtual-machines/linux/terraform-install-configure
 #---------------------------------------------------------
 # app_id used for az command and terraform
 ARM_CLIENT_ID={set app_id from service principal}
@@ -100,9 +104,8 @@ ARM_TENANT_ID={set tenant_id from service principal}
 ARM_SUBSCRIPTION_ID={set subscription_id from service principal}
 
 #---------------------------------------------------------
-# for terraform state
-# see
-# https://docs.microsoft.com/ja-jp/azure/terraform/terraform-backend
+# Store Terraform state in Azure Storage
+# https://docs.microsoft.com/azure/terraform/terraform-backend
 #---------------------------------------------------------
 # Azure Storage Account Name for terraform state
 STORAGE_ACCOUNT_NAME={storage account name}
@@ -124,15 +127,19 @@ Here is example.
 
 ```shell
 $ cat env/development/.env
+#---------------------------------------------------------
+# base
+#---------------------------------------------------------
 # ENV uses terraform.${ENV}.tfvars file etc...
 ENV=development
 
 # IS_GENERATE_PROVIDER generates main_init.tf for terraform and provider and google_project data resources.
 # When IS_GENERATE_PROVIDER is equal to 1, created main_init.tf under workspace directory.
 IS_GENERATE_PROVIDER=1
+
 #---------------------------------------------------------
-# see
-# https://docs.microsoft.com/ja-jp/azure/virtual-machines/linux/terraform-install-configure
+# Install and configure Terraform to provision Azure resources
+# https://docs.microsoft.com/azure/virtual-machines/linux/terraform-install-configure
 #---------------------------------------------------------
 # app_id used for az command and terraform
 ARM_CLIENT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
@@ -149,9 +156,8 @@ ARM_TENANT_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
 ARM_SUBSCRIPTION_ID=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxx
 
 #---------------------------------------------------------
-# for terraform state
-# see
-# https://docs.microsoft.com/ja-jp/azure/terraform/terraform-backend
+# Store Terraform state in Azure Storage
+# https://docs.microsoft.com/azure/terraform/terraform-backend
 #---------------------------------------------------------
 # Azure Storage Account Name for terraform state
 STORAGE_ACCOUNT_NAME=xxxxxxxxxxxxxxxxxx
@@ -180,7 +186,7 @@ https://code.visualstudio.com/docs/remote/containers
 
 ```bash
 bash-5.0# terraform -v
-Terraform v0.12.23
+Terraform v0.12.25
 ```
 
 ### az versions
