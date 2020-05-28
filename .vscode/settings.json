@@ -44,14 +44,14 @@
   "editor.renderControlCharacters": true, // 制御文字の表示
   "editor.renderLineHighlight": "all", // 選択中の行を強調する
   "editor.renderWhitespace": "all", // エディターで空白文字を表示する方法を制御します。'none'、'boundary' および 'all' が使用可能です。'boundary' オプションでは、単語間の単一スペースは表示されません。
-  "editor.suggestFontSize": 16, // tab size
-  // "editor.tabSize": 4, // .editorconfig
+  "editor.suggestFontSize": 16, // font size
+  // "editor.tabSize": 4, // (.editorconfig) tab size
   "explorer.confirmDragAndDrop": false,
   "files.autoGuessEncoding": true, // 文字コードを自動判別
   "files.eol": "\n", // 改行コードをLF(Linux/OSX)にする
   "files.encoding": "utf8", // 既定の文字コード
   "files.insertFinalNewline": true, // 有効にすると、ファイルの保存時に最新の行を末尾に挿入します。
-  "files.trimTrailingWhitespace": true, // ファイルの保存時に末尾の空白をトリミング
+  // "files.trimTrailingWhitespace": true, // (.editorconfig) ファイルの保存時に末尾の空白をトリミング
   "git.autofetch": true,
   "terminal.integrated.shell.linux": "/bin/bash", // terminal default bash
   "terminal.integrated.scrollback": 10000,

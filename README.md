@@ -14,7 +14,7 @@ https://code.visualstudio.com/docs/remote/remote-overview
 $ cp -rp env/template env/{your environment}
 $ cat env/{your environment}/.devcontainer/devcontainer.json
 {
-  "image": "registry.hub.docker.com/ymiyazakixyz/ymiyazakixyz/terraform-azure:latest",
+  "image": "registry.hub.docker.com/ymiyazakixyz/terraform-azure:latest",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
@@ -46,7 +46,7 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
 
 ```json
 {
-  "dockerFile": "../../../docker/default/Dockerfile",
+  "image": "registry.hub.docker.com/ymiyazakixyz/terraform-azure:latest",
   "settings": {
     "terminal.integrated.shell.linux": "/bin/bash"
   },
@@ -54,6 +54,7 @@ $ cat env/{your environment}/.devcontainer/devcontainer.json
     "mauve.terraform",
     "coenraads.bracket-pair-colorizer-2",
     "eamodio.gitlens",
+    "editorconfig.editorconfig",
     "esbenp.prettier-vscode",
     "ibm.output-colorizer",
     "streetsidesoftware.code-spell-checker",
@@ -313,24 +314,24 @@ provider "azuread" {
 
 ## Required
 
-- Visual Code Studio
+- Visual Code Studio  
   https://code.visualstudio.com/download
-- Docker
+- Docker  
   https://www.docker.com/
 
 ## Other Link
 
-- Docker
+- Docker  
   https://www.docker.com/
-- Terraform
+- Terraform  
   https://www.terraform.io/
-- Azure CLI
+- Azure CLI  
   https://docs.microsoft.com/ja-jp/cli/azure/?view=azure-cli-latest
-- Kubernetes
+- Kubernetes  
   https://kubernetes.io/
-- Helm
+- Helm  
   https://helm.sh/
-- Stern
+- Stern  
   https://github.com/wercker/stern
 
 ## Note
